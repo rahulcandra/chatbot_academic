@@ -275,14 +275,14 @@ div[data-testid="stMetricLabel"] { color: var(--text-muted) !important; font-siz
     padding: 3rem 2rem; position: relative;
 }
 .landing-logo {
-    width: 160px; height: 160px; object-fit: contain;
+    width: 300px; height: 250px; object-fit: contain;
     filter: drop-shadow(0 8px 24px rgba(96,165,250,0.35));
     margin-bottom: 24px;
     animation: floatLogo 4s ease-in-out infinite;
 }
 @keyframes floatLogo {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
+    100% { transform: translateY(-8px); }
 }
 .landing-badge {
     display: inline-block; background: var(--primary-light); color: var(--primary);
@@ -339,7 +339,7 @@ st.markdown(f"<style>{THEME}{COMMON_CSS}</style>", unsafe_allow_html=True)
 # SIDEBAR
 # ─────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### 🎨 Tampilan")
+    st.markdown("### 🎨 Tema")
     col_t1, col_t2 = st.columns([1, 1])
     with col_t1:
         if st.button("🌙 Gelap", use_container_width=True, key="btn_dark"):
@@ -351,16 +351,16 @@ with st.sidebar:
             st.rerun()
 
     tema_label = "🌙 Tema Gelap" if is_dark else "☀️ Tema Terang"
-    st.caption(f"Aktif: **{tema_label}**")
+    st.caption(f"Aktif tema saat ini: **{tema_label}**")
     st.markdown("---")
 
     st.markdown("### 🧭 Navigasi")
     if st.session_state.show_landing:
-        if st.button("🚀 Masuk ke Aplikasi", use_container_width=True, type="primary"):
+        if st.button("Masuk ke Aplikasi", use_container_width=True, type="primary"):
             st.session_state.show_landing = False
             st.rerun()
     else:
-        if st.button("🏠 Kembali ke Beranda", use_container_width=True):
+        if st.button("Kembali ke Beranda", use_container_width=True):
             st.session_state.show_landing = True
             st.rerun()
 
@@ -410,19 +410,19 @@ with st.sidebar:
         st.markdown("### ⚙️ Sistem")
         ca, cb = st.columns(2)
         with ca:
-            if st.button("🔄 Reset", use_container_width=True):
+            if st.button("🔄 Reset Chat", use_container_width=True):
                 dark_backup = st.session_state.dark_mode
                 st.session_state.clear()
                 st.session_state.dark_mode = dark_backup
                 st.session_state.show_landing = False
                 st.rerun()
         with cb:
-            if st.button("🗑️ Clear Chat", use_container_width=True):
+            if st.button("🗑️ Bersihkan Chat", use_container_width=True):
                 st.session_state.history = []
                 st.rerun()
 
     st.markdown("---")
-    st.caption("SIKRS 2026 · Universitas PGRI Semarang\nPowered by Rahul Candra")
+    st.caption("SIKRS 2026 · Universitas PGRI Semarang · Powered by Rahul Candra")
 
 
 # ═════════════════════════════════════════════
@@ -433,13 +433,12 @@ if st.session_state.show_landing:
     st.markdown(f"""
     <div class="landing-hero">
         <img src="data:image/png;base64,{UPGRIS_LOGO_B64}" class="landing-logo" alt="Logo UPGRIS" />
-        <div class="landing-badge">SIKRS - CHATBOT ACADEMIC</div>
         <h1 class="landing-title">
             Susun KRS Lebih<br><span>Cerdas &amp; Cepat</span>
         </h1>
         <p class="landing-sub">
             SIKRS adalah chatbot akademik berbasis <strong>Finite State Machine</strong>
-            yang membantu mahasiswa menyusun Kartu Rencana Studi dengan validasi
+            yang membantu mahasiswa Teknik Informatika untuk menyusun Kartu Rencana Studi dengan validasi
             prasyarat, deteksi konflik jadwal, dan batas SKS secara otomatis.
         </p>
     </div>
@@ -447,7 +446,7 @@ if st.session_state.show_landing:
 
     cta_col = st.columns([1, 2, 1])
     with cta_col[1]:
-        if st.button("🚀  Mulai Susun KRS Sekarang!", use_container_width=True, type="primary"):
+        if st.button("Mulai Susun KRS Sekarang!", use_container_width=True, type="primary"):
             st.session_state.show_landing = False
             st.rerun()
 
@@ -456,8 +455,8 @@ if st.session_state.show_landing:
     <div class="feature-grid">
         <div class="feature-item">
             <div class="feature-icon">🤖</div>
-            <div class="feature-name">Chatbot NLP</div>
-            <div class="feature-desc">Ketik perintah natural seperti "ambil algoritma" atau "jadwal saya".</div>
+            <div class="feature-name">Chatbot</div>
+            <div class="feature-desc">Ketik perintah natural seperti "saya ambil algoritma" atau "jadwal saya hari ini".</div>
         </div>
         <div class="feature-item">
             <div class="feature-icon">⚠️</div>
@@ -481,8 +480,8 @@ if st.session_state.show_landing:
         </div>
         <div class="feature-item">
             <div class="feature-icon">🎨</div>
-            <div class="feature-name">Tema Gelap / Terang</div>
-            <div class="feature-desc">Ganti tema kapan saja dari sidebar — berlaku di seluruh halaman.</div>
+            <div class="feature-name">Tema</div>
+            <div class="feature-desc">Ganti tema kapan saja dari sidebar berlaku di seluruh halaman.</div>
         </div>
     </div>
     </div>
@@ -531,15 +530,15 @@ else:
     <div class="header-banner">
         <img src="data:image/png;base64,{UPGRIS_LOGO_B64}" style="width:100px;height:100px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3));" alt="UPGRIS" />
         <div>
-            <p class="header-title">SIKRS — Chatbot Akademik</p>
-            <p class="header-sub">Sistem Informasi Kartu Rencana Studi · Universitas PGRI Semarang</p>
+            <p class="header-title">SIKRS - Chatbot Akademik UPGRIS</p>
+            <p class="header-sub">Sistem Informasi Kartu Rencana Studi · Program Studi Teknik Informatika · Universitas PGRI Semarang</p>
         </div>
         <div class="header-badge">{s_icon} {s_label}</div>
     </div>
     """, unsafe_allow_html=True)
 
     tab_chat, tab_catalog, tab_schedule, tab_about = st.tabs([
-        "💬 Chat KRS",
+        "💬 Chatbot",
         "📚 Katalog Matkul",
         "📅 Jadwal Saya",
         "ℹ️ Panduan",
@@ -558,7 +557,7 @@ else:
                     with st.chat_message(msg["role"], avatar=avatar):
                         st.markdown(msg["content"])
 
-            prompt = st.chat_input("Contoh: ambil algoritma | jadwal | prasyarat basis data ...")
+            prompt = st.chat_input("Contoh: saya ingin mengambbil mata kuliah algoritma dan struktur data")
             if prompt:
                 st.session_state.history.append({"role": "user", "content": prompt})
                 bot.step(prompt)
@@ -717,7 +716,7 @@ else:
         with col_a:
             st.markdown("""
 #### 🤖 Tentang Chatbot
-Chatbot ini menggunakan **Finite State Machine (FSM)** dengan engine **NLP berbasis regex** untuk membantu mahasiswa menyusun KRS.
+Chatbot ini menggunakan **Finite State Machine (FSM)** dengan engine **NLP berbasis regex** untuk membantu mahasiswa Teknik Informatika **Universitas PGRI Semarang** menyusun KRS.
 
 **State yang tersedia:**
 | State | Keterangan |
@@ -763,8 +762,9 @@ bantuan                 → panduan lengkap
         st.markdown("---")
         st.markdown(f"""
         <div style='text-align:center;color:var(--text-muted);font-size:13px;padding:10px;'>
-        SIKRS v1.0 · Dikembangkan untuk tugas Teori Bahasa &amp; Otomata<br>
-        Mengimplementasikan <b>Finite State Machine</b> + <b>NLP Engine</b> ·
-        Tema saat ini: <b>{'🌙 Gelap' if is_dark else '☀️ Terang'}</b>
+        SIKRS 2026 · Dikembangkan oleh <b>Rahul Candra<br>
+        Mengimplementasikan <b>Finite State Machine</b> & <b>NLP Engine</b>
+        · Program Studi Teknik Informatika<br>
+        <b>Universitas PGRI Semarang</b>
         </div>
         """, unsafe_allow_html=True)

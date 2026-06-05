@@ -138,9 +138,9 @@ class AcademicFSM:
         if user_input == "" and self.state == State.IDLE:
             self.state = State.BROWSING
             self.response = (
-                "👋 *Selamat datang di Sistem KRS Akademik!*\n\n"
+                "*Selamat datang di Sistem KRS Akademik! 👋*\n\n"
                 "Saya akan membantu Anda menyusun Kartu Rencana Studi.\n\n"
-                "📌 Yang bisa saya bantu:\n"
+                "Yang bisa saya bantu:\n"
                 "• Lihat daftar mata kuliah → ketik *'menu'*\n"
                 "• Tambah matkul → ketik *'ambil [nama matkul]'*\n"
                 "• Cek jadwal → ketik *'jadwal'*\n"

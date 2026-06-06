@@ -440,7 +440,7 @@ if st.session_state.show_landing:
 
     st.markdown(f"""
     <div class="landing-hero">
-        <img src="data:image/png;base64,{UPGRIS_LOGO_B64}" style="width: 150px; height: auto;" class="landing-logo" alt="Logo UPGRIS" />
+        <img src="data:image/png;base64,{UPGRIS_LOGO_B64}" style="width: 350px; height: auto;" class="landing-logo" alt="Logo UPGRIS" />
         <h1 class="landing-title">
             Susun KRS Lebih<br><span>Cerdas &amp; Cepat</span>
         </h1>

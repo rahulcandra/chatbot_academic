@@ -305,7 +305,6 @@ class AcademicFSM:
                     nama = course_key.replace("_", " ").title()
                     self.response = f"💡 *Tips belajar {nama}:*\n\n_{data['tips']}_"
                 else:
-                    # Tips umum random
                     self.response = f"💡 *Tips Akademik:*\n\n{random.choice(ACADEMIC_FACTS)}"
 
             elif intent == "ASK_DIFFICULTY":
@@ -321,7 +320,6 @@ class AcademicFSM:
                         f"💡 _{data['tips']}_"
                     )
                 else:
-                    # Ranking kesulitan semua matkul
                     lines = ["🎚️ *Peringkat Kesulitan Matkul:*\n"]
                     sorted_courses = sorted(
                         self.nlp.course_data.items(),

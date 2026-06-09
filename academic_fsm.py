@@ -3,14 +3,14 @@ import random
 from enum import Enum, auto
 
 ACADEMIC_FACTS = [
-    "📊 Teknik Pomodoro: 25 menit belajar, 5 menit istirahat — terbukti meningkatkan fokus hingga 40%.",
-    "🧠 Spaced Repetition: Mengulang materi di interval tertentu jauh lebih efektif daripada belajar sekaligus.",
-    "✍️ Menulis catatan tangan meningkatkan retensi memori lebih baik dibanding mengetik.",
-    "🤝 Belajar kelompok efektif untuk matkul berbasis konsep; belajar mandiri lebih baik untuk coding.",
-    "💤 Tidur cukup 7–8 jam setelah belajar membantu konsolidasi memori jangka panjang.",
-    "🎯 Mulai dengan matkul tersulit di pagi hari saat energi dan fokus masih optimal.",
-    "📱 Mode fokus (matikan notif) terbukti meningkatkan produktivitas belajar hingga 23%.",
-    "🔁 Mengajarkan materi ke orang lain (Feynman Technique) adalah cara paling efektif memahami konsep.",
+    "Teknik Pomodoro: 25 menit belajar, 5 menit istirahat — terbukti meningkatkan fokus hingga 40%.",
+    "Spaced Repetition: Mengulang materi di interval tertentu jauh lebih efektif daripada belajar sekaligus.",
+    "Menulis catatan tangan meningkatkan retensi memori lebih baik dibanding mengetik.",
+    "Belajar kelompok efektif untuk matkul berbasis konsep; belajar mandiri lebih baik untuk coding.",
+    "Tidur cukup 7-8 jam setelah belajar membantu konsolidasi memori jangka panjang.",
+    "Mulai dengan matkul tersulit di pagi hari saat energi dan fokus masih optimal.",
+    "Mode fokus (matikan notif) terbukti meningkatkan produktivitas belajar hingga 23%.",
+    "Mengajarkan materi ke orang lain (Feynman Technique) adalah cara paling efektif memahami konsep.",
 ]
 
 class State(Enum):
@@ -22,9 +22,64 @@ class State(Enum):
 class NLPEngine:
     MAX_SKS = 24
 
-    # Semua matkul dari data jadwal (bukan KKN/KKL/TA/Kuliah Kerja Lapangan)
     course_data = {
-        # ── SEMESTER 2 (dari data) ──
+        # ── SEMESTER 1 ──
+        "pendidikan_agama": {
+            "kode": "MPK-101", "sks": 2, "semester": 1,
+            "emoji": "🕌", "kategori": "Wajib",
+            "desc": "Nilai-nilai keagamaan, akhlak mulia, dan pembentukan karakter mahasiswa.",
+            "jadwal": "Senin 07:30", "ruang": "GP 601",
+            "dosen": "TBD",
+            "prereq": [], "difficulty": 1,
+            "tips": "Aktif dalam diskusi kelas dan kaitkan nilai agama dengan etika profesi IT."
+        },
+        "pendidikan_kewarganegaraan": {
+            "kode": "MPK-102", "sks": 2, "semester": 1,
+            "emoji": "🇮🇩", "kategori": "Wajib",
+            "desc": "Wawasan kebangsaan, demokrasi, hak asasi manusia, dan bela negara.",
+            "jadwal": "Selasa 07:30", "ruang": "GP 601",
+            "dosen": "TBD",
+            "prereq": [], "difficulty": 1,
+            "tips": "Kaitkan wawasan kebangsaan dengan isu digital dan keamanan siber nasional."
+        },
+        "matematika_dasar": {
+            "kode": "MAT-101", "sks": 3, "semester": 1,
+            "emoji": "➕", "kategori": "Wajib",
+            "desc": "Aljabar, fungsi, trigonometri, dan dasar-dasar matematika untuk teknik.",
+            "jadwal": "Rabu 07:30", "ruang": "GP 607",
+            "dosen": "Agung Handayanto",
+            "prereq": [], "difficulty": 2,
+            "tips": "Latihan soal setiap hari. Manfaatkan Khan Academy untuk materi yang belum paham."
+        },
+        "algoritma_pemrograman": {
+            "kode": "TI-101", "sks": 3, "semester": 1,
+            "emoji": "🔄", "kategori": "Wajib",
+            "desc": "Logika algoritma, flowchart, pseudocode, dan pengantar pemrograman terstruktur.",
+            "jadwal": "Kamis 07:30", "ruang": "GU 401",
+            "dosen": "Nugroho D. S.",
+            "prereq": [], "difficulty": 2,
+            "tips": "Latih flowchart manual dulu sebelum coding. Gunakan draw.io untuk visualisasi algoritma."
+        },
+        "pengantar_teknologi_informasi": {
+            "kode": "TI-102", "sks": 2, "semester": 1,
+            "emoji": "💡", "kategori": "Wajib",
+            "desc": "Pengenalan hardware, software, jaringan, dan perkembangan teknologi informasi.",
+            "jadwal": "Jumat 07:30", "ruang": "GP 608",
+            "dosen": "Noora Qotrun Nada",
+            "prereq": [], "difficulty": 1,
+            "tips": "Baca berita teknologi terkini di TechCrunch atau IDN Times Tech untuk konteks nyata."
+        },
+        "fisika_dasar": {
+            "kode": "FIS-101", "sks": 2, "semester": 1,
+            "emoji": "⚛️", "kategori": "Wajib",
+            "desc": "Mekanika, listrik, magnet, dan gelombang untuk dasar ilmu teknik.",
+            "jadwal": "Senin 10:00", "ruang": "GP 607",
+            "dosen": "TBD",
+            "prereq": [], "difficulty": 2,
+            "tips": "Hubungkan konsep fisika dengan elektronika dan IoT yang akan dipelajari di semester selanjutnya."
+        },
+
+        # ── SEMESTER 2 ──
         "kalkulus_integral": {
             "kode": "TI-201", "sks": 2, "semester": 2,
             "emoji": "📐", "kategori": "Wajib",
@@ -97,6 +152,63 @@ class NLPEngine:
             "prereq": [], "difficulty": 2,
             "tips": "Biasakan membaca dokumentasi teknis dalam bahasa Inggris. Gunakan Duolingo harian."
         },
+
+        # ── SEMESTER 3 ──
+        "jaringan_komputer": {
+            "kode": "TI-301", "sks": 3, "semester": 3,
+            "emoji": "🌐", "kategori": "Wajib",
+            "desc": "Arsitektur jaringan, protokol TCP/IP, routing, switching, dan keamanan jaringan dasar.",
+            "jadwal": "Senin 10:00", "ruang": "GP 609",
+            "dosen": "Noora Qotrun Nada",
+            "prereq": ["sistem_operasi"], "difficulty": 3,
+            "tips": "Praktikkan dengan Cisco Packet Tracer (gratis). Sertifikasi CCNA sangat berharga di industri."
+        },
+        "basis_data": {
+            "kode": "TI-302", "sks": 3, "semester": 3,
+            "emoji": "🗄️", "kategori": "Wajib",
+            "desc": "Perancangan database, SQL, normalisasi, dan sistem manajemen basis data.",
+            "jadwal": "Rabu 08:20", "ruang": "GU 301",
+            "dosen": "Bambang Agus Herlambang",
+            "prereq": ["struktur_data"], "difficulty": 3,
+            "tips": "Kuasai SQL dengan SQLZoo atau Mode Analytics. Praktikkan normalisasi pada studi kasus nyata."
+        },
+        "pemrograman_berorientasi_objek": {
+            "kode": "TI-303", "sks": 3, "semester": 3,
+            "emoji": "🧩", "kategori": "Wajib",
+            "desc": "Konsep OOP: class, inheritance, polymorphism, encapsulation, dan design patterns.",
+            "jadwal": "Selasa 10:00", "ruang": "GU 401",
+            "dosen": "Aris Tri Joko Harjanto",
+            "prereq": ["pemrograman_komputer"], "difficulty": 3,
+            "tips": "Buat minimal 3 proyek OOP. Pelajari design patterns dari refactoring.guru."
+        },
+        "logika_informatika": {
+            "kode": "TI-304", "sks": 2, "semester": 3,
+            "emoji": "🧮", "kategori": "Wajib",
+            "desc": "Logika proposisi, predikat, inferensi, dan aplikasi logika dalam pemrograman.",
+            "jadwal": "Kamis 08:20", "ruang": "GP 607",
+            "dosen": "Agung Handayanto",
+            "prereq": ["matematika_dasar"], "difficulty": 3,
+            "tips": "Latihan soal pembuktian logika setiap hari. Gunakan tabel kebenaran untuk visualisasi."
+        },
+        "rekayasa_perangkat_lunak": {
+            "kode": "TI-305", "sks": 3, "semester": 3,
+            "emoji": "⚙️", "kategori": "Wajib",
+            "desc": "SDLC, metodologi Agile/Scrum, dokumentasi perangkat lunak, dan quality assurance.",
+            "jadwal": "Jumat 10:00", "ruang": "GP 608",
+            "dosen": "Setyoningsih Wibowo",
+            "prereq": ["pemrograman_komputer"], "difficulty": 3,
+            "tips": "Pelajari Git flow dan manajemen proyek Agile. Buat proyek tim dengan GitHub Projects."
+        },
+        "statistika": {
+            "kode": "MAT-301", "sks": 2, "semester": 3,
+            "emoji": "📊", "kategori": "Wajib",
+            "desc": "Statistika deskriptif, probabilitas, distribusi, uji hipotesis, dan regresi.",
+            "jadwal": "Senin 13:00", "ruang": "GP 607",
+            "dosen": "Rizky Esti Utami",
+            "prereq": ["matematika_dasar"], "difficulty": 3,
+            "tips": "Gunakan R atau Python (pandas, scipy) untuk praktik statistika. Kaggle menyediakan dataset gratis."
+        },
+
         # ── SEMESTER 4 ──
         "matematika_diskrit": {
             "kode": "TI-401", "sks": 3, "semester": 4,
@@ -109,7 +221,7 @@ class NLPEngine:
         },
         "analisis_dan_perancangan_sistem": {
             "kode": "TI-402", "sks": 3, "semester": 4,
-            "emoji": "📊", "kategori": "Wajib",
+            "emoji": "📋", "kategori": "Wajib",
             "desc": "Metodologi pengembangan sistem, DFD, ERD, dan dokumentasi analisis kebutuhan.",
             "jadwal": "Selasa 07:30", "ruang": "GP 401",
             "dosen": "Bambang Agus Herlambang",
@@ -188,6 +300,63 @@ class NLPEngine:
             "prereq": [], "difficulty": 2,
             "tips": "Hubungkan konsep MSDM dengan praktik di perusahaan teknologi seperti Google atau Tokopedia."
         },
+
+        # ── SEMESTER 5 ──
+        "kecerdasan_buatan": {
+            "kode": "TI-501", "sks": 3, "semester": 5,
+            "emoji": "🤖", "kategori": "Wajib",
+            "desc": "Konsep AI, searching, knowledge representation, machine learning dasar, dan neural network.",
+            "jadwal": "Senin 10:00", "ruang": "GU 401",
+            "dosen": "Khoiriya Latifah",
+            "prereq": ["matematika_diskrit"], "difficulty": 4,
+            "tips": "Kuasai Python untuk AI. Ikuti kursus Andrew Ng di Coursera sebagai tambahan."
+        },
+        "pemrograman_mobile": {
+            "kode": "TI-502", "sks": 3, "semester": 5,
+            "emoji": "📱", "kategori": "Wajib",
+            "desc": "Pengembangan aplikasi mobile Android/iOS menggunakan framework modern.",
+            "jadwal": "Selasa 13:00", "ruang": "GU 401",
+            "dosen": "Febrian Murti Dewanto",
+            "prereq": ["pemrograman_berorientasi_objek"], "difficulty": 3,
+            "tips": "Buat minimal 2 aplikasi mobile untuk portofolio. Publish ke Google Play Store."
+        },
+        "keamanan_sistem_informasi": {
+            "kode": "TI-503", "sks": 3, "semester": 5,
+            "emoji": "🔐", "kategori": "Wajib",
+            "desc": "Kriptografi, keamanan jaringan, ethical hacking, dan manajemen risiko keamanan informasi.",
+            "jadwal": "Rabu 10:00", "ruang": "GP 608",
+            "dosen": "Saeful Fahmi",
+            "prereq": ["jaringan_komputer"], "difficulty": 4,
+            "tips": "Ikuti CTF (Capture The Flag) online. Platform TryHackMe dan HackTheBox sangat direkomendasikan."
+        },
+        "manajemen_proyek_ti": {
+            "kode": "TI-504", "sks": 2, "semester": 5,
+            "emoji": "📊", "kategori": "Wajib",
+            "desc": "Perencanaan proyek, manajemen risiko, Agile, Scrum, dan tools manajemen proyek.",
+            "jadwal": "Kamis 13:00", "ruang": "GP 608",
+            "dosen": "Bambang Agus Herlambang",
+            "prereq": ["rekayasa_perangkat_lunak"], "difficulty": 2,
+            "tips": "Pelajari Jira, Trello, dan MS Project. Sertifikasi PMP/Scrum Master sangat dihargai industri."
+        },
+        "sistem_informasi_manajemen": {
+            "kode": "TI-505", "sks": 3, "semester": 5,
+            "emoji": "🏢", "kategori": "Wajib",
+            "desc": "Sistem informasi untuk pengambilan keputusan manajemen, ERP, CRM, dan SCM.",
+            "jadwal": "Jumat 10:00", "ruang": "GP 609",
+            "dosen": "Setyoningsih Wibowo",
+            "prereq": ["basis_data", "analisis_dan_perancangan_sistem"], "difficulty": 3,
+            "tips": "Pelajari SAP Business One atau Odoo untuk simulasi ERP. Sangat relevan di dunia kerja."
+        },
+        "pengolahan_citra": {
+            "kode": "TI-506", "sks": 3, "semester": 5,
+            "emoji": "🖼️", "kategori": "Pilihan",
+            "desc": "Teknik pengolahan citra digital, segmentasi, deteksi tepi, dan klasifikasi gambar.",
+            "jadwal": "Senin 13:00", "ruang": "GU 301",
+            "dosen": "Mega Novita",
+            "prereq": ["matematika_diskrit"], "difficulty": 4,
+            "tips": "Kuasai OpenCV dan PIL di Python. Ikuti kompetisi computer vision di Kaggle."
+        },
+
         # ── SEMESTER 6 ──
         "metodologi_penelitian": {
             "kode": "TI-601", "sks": 2, "semester": 6,
@@ -212,13 +381,13 @@ class NLPEngine:
             "emoji": "📈", "kategori": "Wajib",
             "desc": "Analisis data, machine learning dasar, visualisasi data, dan Python untuk data science.",
             "jadwal": "Senin 13:00", "ruang": "GU 401",
-            "dosen": "Khoiriya Latifah / Konduru Kranthi Kumar",
+            "dosen": "Khoiriya Latifah",
             "prereq": ["matematika_diskrit"], "difficulty": 5,
             "tips": "Kuasai Python (Pandas, NumPy, Scikit-learn). Ikuti Kaggle competition untuk pengalaman nyata."
         },
         "teori_bahasa_dan_otomata": {
             "kode": "TI-604", "sks": 3, "semester": 6,
-            "emoji": "🤖", "kategori": "Wajib",
+            "emoji": "⚙️", "kategori": "Wajib",
             "desc": "Automata, grammar formal, regular expression, pushdown automata, dan mesin Turing.",
             "jadwal": "Jumat 09:10", "ruang": "GP 607",
             "dosen": "Ramadhan Renaldy",
@@ -252,6 +421,54 @@ class NLPEngine:
             "prereq": [], "difficulty": 1,
             "tips": "Kaitkan nilai Pancasila dengan etika dalam pengembangan teknologi dan AI."
         },
+
+        # ── SEMESTER 7 ──
+        "cloud_computing": {
+            "kode": "TI-701", "sks": 3, "semester": 7,
+            "emoji": "☁️", "kategori": "Pilihan",
+            "desc": "Arsitektur cloud, layanan AWS/GCP/Azure, containerisasi Docker, dan Kubernetes.",
+            "jadwal": "Senin 10:00", "ruang": "GP 609",
+            "dosen": "Saeful Fahmi",
+            "prereq": ["jaringan_komputer", "sistem_operasi"], "difficulty": 4,
+            "tips": "Manfaatkan AWS Free Tier atau GCP Free Credits. Kejar sertifikasi AWS Cloud Practitioner."
+        },
+        "big_data": {
+            "kode": "TI-702", "sks": 3, "semester": 7,
+            "emoji": "🗄️", "kategori": "Pilihan",
+            "desc": "Arsitektur big data, Hadoop, Spark, data pipeline, dan analitik skala besar.",
+            "jadwal": "Rabu 13:00", "ruang": "GU 401",
+            "dosen": "Khoiriya Latifah",
+            "prereq": ["data_science"], "difficulty": 5,
+            "tips": "Pelajari Apache Spark dan Kafka. Ikuti program Bangkit Academy untuk hands-on experience."
+        },
+        "pengembangan_game": {
+            "kode": "TI-703", "sks": 3, "semester": 7,
+            "emoji": "🎮", "kategori": "Pilihan",
+            "desc": "Game design, game mechanics, pengembangan menggunakan Unity/Unreal, dan monetisasi.",
+            "jadwal": "Selasa 10:00", "ruang": "GU 401",
+            "dosen": "Febrian Murti Dewanto",
+            "prereq": ["teknologi_animasi", "pemrograman_berorientasi_objek"], "difficulty": 4,
+            "tips": "Mulai dengan game sederhana di Unity (gratis). Publish ke itch.io untuk portofolio."
+        },
+        "kuliah_kerja_lapangan": {
+            "kode": "TI-704", "sks": 2, "semester": 7,
+            "emoji": "🏭", "kategori": "Wajib",
+            "desc": "Praktik kerja lapangan di perusahaan atau instansi terkait bidang teknologi informasi.",
+            "jadwal": "Jumat 20:10", "ruang": "Balairung",
+            "dosen": "Aris Tri Joko Harjanto",
+            "prereq": [], "difficulty": 2,
+            "tips": "Cari tempat KKL yang sesuai minat karir. Manfaatkan untuk membangun koneksi profesional."
+        },
+        "kuliah_kerja_nyata": {
+            "kode": "TI-705", "sks": 4, "semester": 7,
+            "emoji": "🌍", "kategori": "Wajib",
+            "desc": "Pengabdian masyarakat dengan menerapkan ilmu teknologi informasi di lingkungan nyata.",
+            "jadwal": "Sabtu 07:30", "ruang": "A.201",
+            "dosen": "Aryan Eka Prastya Nugraha",
+            "prereq": [], "difficulty": 2,
+            "tips": "Buat program IT yang berkelanjutan untuk masyarakat. Dokumentasikan dengan baik untuk laporan."
+        },
+
         # ── SEMESTER 8 ──
         "sistem_multimedia_interaktif": {
             "kode": "TI-801", "sks": 3, "semester": 8,
@@ -262,10 +479,35 @@ class NLPEngine:
             "prereq": ["teknologi_animasi"], "difficulty": 4,
             "tips": "Kuasai Unity atau Godot untuk game. Pelajari prinsip UX dari Google Material Design."
         },
+        "workshop_ti_lanjut": {
+            "kode": "TI-802", "sks": 2, "semester": 8,
+            "emoji": "🛠️", "kategori": "Wajib",
+            "desc": "Workshop lanjut pengembangan proyek TI, persiapan tugas akhir, dan presentasi karya.",
+            "jadwal": "Sabtu 10:00", "ruang": "GU 401",
+            "dosen": "Noora Qotrun Nada",
+            "prereq": ["workshop_teknologi_informasi"], "difficulty": 3,
+            "tips": "Fokus pada proyek yang bisa dikembangkan menjadi skripsi. Mulai kumpulkan referensi jurnal."
+        },
+        "tugas_akhir": {
+            "kode": "TI-803", "sks": 6, "semester": 8,
+            "emoji": "🎓", "kategori": "Wajib",
+            "desc": "Penelitian mandiri, pengembangan sistem/aplikasi, penulisan skripsi, dan sidang akhir.",
+            "jadwal": "Sabtu 08:20", "ruang": "GP 401",
+            "dosen": "Noora Qotrun Nada",
+            "prereq": ["metodologi_penelitian"], "difficulty": 5,
+            "tips": "Pilih topik yang sesuai passion dan relevan industri. Mulai dari semester 7. Konsultasi rutin dengan dosen pembimbing."
+        },
     }
 
-    # Sinonim untuk pengenalan perintah
     SYNONYMS = {
+        # Semester 1
+        "pendidikan_agama":               ["agama", "pend agama", "pendidikan agama", "mpk101"],
+        "pendidikan_kewarganegaraan":      ["pkn", "kewarganegaraan", "civics", "pend kewarganegaraan"],
+        "matematika_dasar":               ["matdas", "matematika dasar", "mat dasar", "mat101"],
+        "algoritma_pemrograman":           ["algoritma", "algor", "algoprog", "ti101"],
+        "pengantar_teknologi_informasi":   ["pti", "pengantar ti", "pengantar teknologi", "ti102"],
+        "fisika_dasar":                    ["fisika", "fis dasar", "fisika dasar", "fis101"],
+        # Semester 2
         "kalkulus_integral":              ["kalkulus", "kalkul", "integral", "matkal", "kal int"],
         "sistem_operasi":                 ["so", "sistem operasi", "os", "sismop", "sis op"],
         "struktur_data":                  ["strukdat", "struktur data", "sd", "strdat"],
@@ -274,6 +516,14 @@ class NLPEngine:
         "ke_pgri_an":                     ["pgri", "ke-pgri-an", "kepgrian", "kepgri"],
         "bahasa_indonesia":               ["bind", "bahasa indonesia", "b.ind", "b ind"],
         "bahasa_inggris":                 ["bing", "bahasa inggris", "b.ing", "english"],
+        # Semester 3
+        "jaringan_komputer":              ["jarkom", "jaringan komputer", "jaringan", "network"],
+        "basis_data":                     ["basdat", "basis data", "database", "db"],
+        "pemrograman_berorientasi_objek": ["pbo", "oop", "pemrograman objek", "berorientasi objek"],
+        "logika_informatika":             ["logika", "log inf", "logika informatika"],
+        "rekayasa_perangkat_lunak":       ["rpl", "rekayasa pl", "software engineering", "softek"],
+        "statistika":                     ["statistik", "stats", "stat", "statistika"],
+        # Semester 4
         "matematika_diskrit":             ["matdis", "matematika diskrit", "diskrit", "mat diskrit"],
         "analisis_dan_perancangan_sistem":["aps", "analisis perancangan sistem", "analsis", "anper"],
         "pemrograman_web":                ["web", "pemweb", "progweb", "pemrograman web"],
@@ -284,6 +534,14 @@ class NLPEngine:
         "digital_marketing":              ["digmar", "digital marketing", "dig mark", "marketing digital"],
         "studi_kelayakan_bisnis":         ["skb", "studi kelayakan", "kelayakan bisnis"],
         "manajemen_sdm":                  ["msdm", "manajemen sdm", "sdm", "hr"],
+        # Semester 5
+        "kecerdasan_buatan":              ["ai", "kecerdasan buatan", "kb", "artificial intelligence"],
+        "pemrograman_mobile":             ["mobile", "android", "ios", "pem mobile"],
+        "keamanan_sistem_informasi":      ["keamanan", "ksi", "cybersecurity", "security"],
+        "manajemen_proyek_ti":            ["mpti", "manajemen proyek", "project management"],
+        "sistem_informasi_manajemen":     ["sim", "sistem informasi manajemen", "erp"],
+        "pengolahan_citra":               ["citra", "image processing", "computer vision"],
+        # Semester 6
         "metodologi_penelitian":          ["metpen", "metodologi penelitian", "metodologi", "met pen"],
         "e_business":                     ["ebis", "e-business", "ebusiness", "e business"],
         "data_science":                   ["ds", "data science", "datasci", "datascience"],
@@ -291,7 +549,16 @@ class NLPEngine:
         "workshop_teknologi_informasi":   ["workshop ti", "wti", "workshop teknologi", "workshop"],
         "etika_profesi":                  ["etika", "etpro", "etika profesi"],
         "pendidikan_pancasila":           ["pancasila", "pend pancasila", "ppkn pancasila"],
+        # Semester 7
+        "cloud_computing":                ["cloud", "aws", "gcp", "azure", "komputasi awan"],
+        "big_data":                       ["big data", "bigdata", "hadoop", "spark"],
+        "pengembangan_game":              ["game", "gamedev", "pengembangan game", "unity"],
+        "kuliah_kerja_lapangan":          ["kkl", "kerja lapangan", "magang", "kuliah kerja lapangan"],
+        "kuliah_kerja_nyata":             ["kkn", "kuliah kerja nyata", "pengabdian"],
+        # Semester 8
         "sistem_multimedia_interaktif":   ["multimedia", "smi", "interaktif", "game dev"],
+        "workshop_ti_lanjut":             ["workshop lanjut", "workshop 2", "workshop akhir"],
+        "tugas_akhir":                    ["ta", "skripsi", "tugas akhir", "thesis", "sidang"],
     }
 
     def identify_course(self, text: str):
@@ -364,16 +631,13 @@ class AcademicFSM:
             return False, "❌ Mata kuliah tidak ditemukan."
         if any(c["course_key"] == key for c in self.cart):
             return False, f"⚠️ **{key.replace('_',' ').title()}** sudah ada di KRS kamu."
-        # Cek prasyarat
         for pre in data["prereq"]:
             if not any(c["course_key"] == pre for c in self.cart):
                 pre_name = pre.replace("_", " ").title()
                 return False, f"🔒 Tidak bisa menambahkan **{key.replace('_',' ').title()}** — prasyarat **{pre_name}** belum diambil."
-        # Cek konflik jadwal
         for c in self.cart:
             if c["jadwal"] == data["jadwal"]:
                 return False, f"⏰ Konflik jadwal! **{key.replace('_',' ').title()}** bentrok dengan **{c['course_key'].replace('_',' ').title()}** di jadwal {data['jadwal']}."
-        # Cek SKS
         if self.total_sks() + data["sks"] > self.nlp.MAX_SKS:
             return False, f"📊 Tidak bisa tambah! Total SKS akan melebihi batas maksimum {self.nlp.MAX_SKS} SKS."
         self.cart.append({
@@ -387,7 +651,7 @@ class AcademicFSM:
             f"- 📅 Jadwal: {data['jadwal']}\n"
             f"- 📍 Ruang: {data['ruang']}\n"
             f"- 👨‍🏫 Dosen: {data['dosen']}\n"
-            f"- 📊 SKS: {data['sks']} | Total sekarang: **{self.total_sks() + 0} SKS**\n\n"
+            f"- 📊 SKS: {data['sks']} | Total sekarang: **{self.total_sks()} SKS**\n\n"
             f"💡 *Tips: {data['tips']}*"
         )
 
@@ -395,7 +659,7 @@ class AcademicFSM:
         before = len(self.cart)
         self.cart = [c for c in self.cart if c["course_key"] != key]
         if len(self.cart) < before:
-            self._notify(f"🗑️ Dihapus: {key.replace('_',' ').title()}")
+            self._notify(f"🗑️ Dihapus: {key.replace('_','  ').title()}")
             return f"🗑️ **{key.replace('_',' ').title()}** berhasil dihapus dari KRS."
         return f"⚠️ **{key.replace('_',' ').title()}** tidak ada di KRS kamu."
 
@@ -430,7 +694,6 @@ class AcademicFSM:
                 self._resp = "❓ Ketik **ya** untuk konfirmasi submit atau **tidak** untuk batal."
             return
 
-        # BROWSING state
         if intent == "ADD" and course:
             _, msg = self.add_course(course)
             self._resp = msg
@@ -506,11 +769,17 @@ class AcademicFSM:
         for k, v in self.nlp.course_data.items():
             by_sem.setdefault(v["semester"], []).append((k, v))
         for sem in sorted(by_sem):
-            lines.append(f"\n**Semester {sem}:**")
+            lines.append(f"\n**── Semester {sem} ──**")
             for k, v in by_sem[sem]:
-                in_krs = "✅" if any(c["course_key"] == k for c in self.cart) else "  "
-                lines.append(f"{in_krs} {v['emoji']} `{k.replace('_',' ').title()}` — {v['sks']} SKS | {v['jadwal']}")
-        lines.append(f"\n📊 Total SKS tersedia: {sum(v['sks'] for v in self.nlp.course_data.values())} SKS | Maks ambil: {self.nlp.MAX_SKS} SKS")
+                in_krs = "✅" if any(c["course_key"] == k for c in self.cart) else "◻️"
+                kat_tag = "Wajib" if v["kategori"] == "Wajib" else "Pilihan"
+                lines.append(
+                    f"\n{in_krs} {v['emoji']} **{k.replace('_',' ').title()}**\n"
+                    f"   `{v['kode']}` · {v['sks']} SKS · {kat_tag}\n"
+                    f"   🕐 {v['jadwal']} · 📍 {v['ruang']}"
+                )
+        lines.append(f"\n\n📊 **Total SKS kamu: {self.total_sks()}/{self.nlp.MAX_SKS} SKS**")
+        lines.append("Ketik `ambil [nama matkul]` untuk menambahkan ke KRS.")
         return "\n".join(lines)
 
     def _info_msg(self, key):
@@ -549,9 +818,12 @@ class AcademicFSM:
         taken_jadwal = {c["jadwal"] for c in self.cart}
         recs = []
         for k, v in self.nlp.course_data.items():
-            if k in taken: continue
-            if self.total_sks() + v["sks"] > self.nlp.MAX_SKS: continue
-            if v["jadwal"] in taken_jadwal: continue
+            if k in taken:
+                continue
+            if self.total_sks() + v["sks"] > self.nlp.MAX_SKS:
+                continue
+            if v["jadwal"] in taken_jadwal:
+                continue
             prereq_ok = all(p in taken for p in v["prereq"])
             if prereq_ok:
                 recs.append((k, v))
@@ -560,7 +832,10 @@ class AcademicFSM:
         random.shuffle(recs)
         lines = ["🎯 **Rekomendasi Mata Kuliah untuk Kamu:**\n"]
         for k, v in recs[:5]:
-            lines.append(f"- {v['emoji']} **{k.replace('_',' ').title()}** ({v['sks']} SKS) — {v['jadwal']} | {v['dosen']}")
+            lines.append(
+                f"- {v['emoji']} **{k.replace('_',' ').title()}** ({v['sks']} SKS)\n"
+                f"  📅 {v['jadwal']} · 📍 {v['ruang']} · 👨‍🏫 {v['dosen']}"
+            )
         lines.append(f"\nKetik `ambil [nama matkul]` untuk menambahkan ke KRS.")
         return "\n".join(lines)
 

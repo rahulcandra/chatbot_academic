@@ -1,7 +1,6 @@
 import base64
 import os
 import random
-import requests
 import streamlit as st
 from academic_fsm import AcademicFSM, State, ACADEMIC_FACTS
 
@@ -14,8 +13,6 @@ try:
     UPGRIS_LOGO_B64 = get_base64_of_image("logo_upgris.png")
 except FileNotFoundError:
     UPGRIS_LOGO_B64 = ""
-
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 st.set_page_config(
     page_title="SIKRS — Sistem Informasi KRS",
@@ -56,7 +53,6 @@ if is_dark:
         "text":         "#e8f0fe",
         "text_muted":   "#7fa8d0",
         "text_faint":   "#3d5875",
-        # Banner
         "banner_title":  "#ffffff",
         "banner_sub":    "rgba(255,255,255,0.85)",
         "sidebar_title": "#ffffff",
@@ -80,7 +76,6 @@ else:
         "text":         "#1e2d45",
         "text_muted":   "#5a789e",
         "text_faint":   "#9ab3cc",
-        # Banner - light mode needs white on gradient background
         "banner_title":  "#ffffff",
         "banner_sub":    "rgba(255,255,255,0.9)",
         "sidebar_title": "#ffffff",
@@ -105,7 +100,6 @@ DARK_VARS = f"""
 COMMON_CSS = f"""
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-/* ── BASE ── */
 html, body, [class*="css"] {{
     font-family: 'Sora', sans-serif !important;
     color: {C['text']} !important;
@@ -123,7 +117,6 @@ section[data-testid="stSidebar"] {{
 div[data-testid="stHeader"] {{ background: transparent !important; height: 0 !important; min-height: 0 !important; }}
 .main>div:first-child {{ padding-top: 0 !important; }}
 
-/* ── FORCE ALL TEXT COLOR ── */
 .stApp p, .stApp span, .stApp label,
 .stApp li, .stApp strong, .stApp em,
 .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5,
@@ -140,20 +133,17 @@ div[data-testid="stHeader"] {{ background: transparent !important; height: 0 !im
 [data-testid="stCaptionContainer"] p,
 .stApp small {{ color: {C['text_muted']} !important; }}
 
-/* ── SIDEBAR text force ── */
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] small,
 section[data-testid="stSidebar"] div {{ color: {C['text']} !important; }}
 
-/* ── TABS ── */
 .stTabs [data-baseweb="tab"] span,
 .stTabs [data-baseweb="tab"] p {{ color: {C['text_muted']} !important; }}
 .stTabs [aria-selected="true"] span,
 .stTabs [aria-selected="true"] p {{ color: {C['text']} !important; }}
 
-/* ── INPUTS ── */
 div[data-testid="stChatInput"] textarea {{
     background: {C['surface2']} !important;
     color: {C['text']} !important;
@@ -170,7 +160,6 @@ div[data-testid="stChatInput"]>div {{ background: {C['surface2']} !important; }}
 .stSelectbox>div>div {{ background: {C['surface2']} !important; color: {C['text']} !important; }}
 [data-testid="stSelectbox"] * {{ color: {C['text']} !important; }}
 
-/* ── BUTTONS ── */
 .stButton>button {{
     background-color: {C['surface2']} !important;
     color: {C['text']} !important;
@@ -196,7 +185,6 @@ button[data-testid="baseButton-primary"] span {{
 }}
 button[data-testid="baseButton-primary"]:hover {{ opacity: .9 !important; }}
 
-/* ── EXPANDER ── */
 .stExpander {{
     background: {C['surface']} !important;
     border: 1px solid {C['border']} !important;
@@ -211,14 +199,12 @@ details summary, details summary * {{
 .stExpander > div *, details > div * {{ color: {C['text']} !important; }}
 [data-testid="stExpander"] * {{ color: {C['text']} !important; }}
 
-/* ── ALERTS ── */
 div[data-testid="stAlert"] {{
     background: {C['surface2']} !important;
     border-color: {C['border']} !important;
 }}
 div[data-testid="stAlert"] p, div[data-testid="stAlert"] span {{ color: {C['text']} !important; }}
 
-/* ── METRICS ── */
 div[data-testid="stMetricValue"] {{
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 22px !important;
@@ -227,7 +213,6 @@ div[data-testid="stMetricValue"] {{
 }}
 div[data-testid="stMetricLabel"] {{ color: {C['text_muted']} !important; font-size: 13px !important; }}
 
-/* ── CHAT INPUT ── */
 div[data-testid="stChatInput"]>div {{
     border-radius: 12px !important;
     border: 1.5px solid {C['border']} !important;
@@ -241,19 +226,15 @@ div[data-testid="stChatInput"]>div:focus-within {{
 .stChatFloatingInputContainer>div,
 .stChatFloatingInputContainer>div>div {{ background: {C['bg']} !important; }}
 
-/* ── SIDEBAR padding ── */
 section[data-testid="stSidebar"]>div {{ padding: 1.4rem 1.1rem !important; }}
 
-/* ── SCROLLBAR ── */
 ::-webkit-scrollbar {{ width: 6px; height: 6px; }}
 ::-webkit-scrollbar-track {{ background: {C['bg2']}; }}
 ::-webkit-scrollbar-thumb {{ background: {C['border']}; border-radius: 3px; }}
 
-/* ── SKS BAR ── */
 .sks-bar-bg {{ background: {C['border']}; border-radius: 999px; height: 10px; margin: 8px 0 4px; overflow: hidden; }}
 .sks-bar-fill {{ height: 100%; border-radius: 999px; transition: width .4s ease; }}
 
-/* ── SIDEBAR PROFILE ── */
 .sidebar-profile {{
     background: linear-gradient(135deg,#0f2d6e 0%,#1a3a8f 50%,#0ea5e9 100%);
     border-radius: 16px; padding: 18px 16px 16px; text-align: center;
@@ -270,7 +251,6 @@ section[data-testid="stSidebar"]>div {{ padding: 1.4rem 1.1rem !important; }}
     display: flex; align-items: center; justify-content: center;
 }}
 
-/* ── SIDEBAR SECTION LABEL ── */
 .sidebar-section-label {{
     font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
     text-transform: uppercase; color: {C['text_muted']} !important;
@@ -281,7 +261,6 @@ section[data-testid="stSidebar"] .sidebar-section-label {{
     color: {C['text_muted']} !important;
 }}
 
-/* ── SKS DASHBOARD ── */
 .sks-dashboard {{
     background: {C['surface']}; border: 1px solid {C['border']};
     border-radius: 12px; padding: 14px; margin-bottom: 10px;
@@ -295,7 +274,6 @@ section[data-testid="stSidebar"] .sidebar-section-label {{
 .sks-mini-val {{ font-size: 17px; font-weight: 700; font-family: 'JetBrains Mono',monospace; color: {C['text']}; }}
 .sks-mini-lbl {{ font-size: 10px; color: {C['text_muted']}; margin-top: 2px; font-weight: 600; }}
 
-/* ── KRS ITEMS ── */
 .krs-item-v2 {{
     display: flex; align-items: center; gap: 9px;
     padding: 8px 11px; border-radius: 10px;
@@ -313,7 +291,6 @@ section[data-testid="stSidebar"] .sidebar-section-label {{
 .krs-item-code {{ font-size: 10.5px; color: {C['text_muted']}; font-family: 'JetBrains Mono',monospace; margin-top: 1px; }}
 .krs-sks-badge {{ background: {C['primary_bg']}; color: {C['primary']}; border-radius: 6px; padding: 3px 7px; font-size: 11.5px; font-weight: 700; font-family: 'JetBrains Mono',monospace; flex-shrink: 0; }}
 
-/* ── NOTIF ITEMS ── */
 .notif-item-v2 {{
     display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px;
     border-radius: 8px; background: {C['surface']}; border: 1px solid {C['border']};
@@ -321,7 +298,6 @@ section[data-testid="stSidebar"] .sidebar-section-label {{
 }}
 .notif-pip {{ width: 6px; height: 6px; border-radius: 50%; background: {C['primary']}; flex-shrink: 0; margin-top: 3px; }}
 
-/* ── HEADER BANNER — teks selalu putih karena background gelap ── */
 .header-banner {{
     background: linear-gradient(135deg,#0f2d6e 0%,#1a56db 45%,#0ea5e9 100%);
     border-radius: 18px; padding: 22px 30px; margin-bottom: 20px;
@@ -337,7 +313,6 @@ section[data-testid="stSidebar"] .sidebar-section-label {{
 .header-title {{ font-size: 22px; font-weight: 800; color: white !important; margin: 0; letter-spacing: -.5px; }}
 .header-sub {{ color: rgba(255,255,255,0.85) !important; font-size: 12.5px; margin: 3px 0 0; }}
 
-/* ── LANDING ── */
 .landing-hero {{
     min-height: 44vh; display: flex; flex-direction: column;
     align-items: center; justify-content: center;
@@ -357,23 +332,18 @@ section[data-testid="stSidebar"] .sidebar-section-label {{
 .landing-tags {{ display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }}
 .landing-tag {{ background: {C['surface']}; border: 1px solid {C['border']}; color: {C['text_muted']}; border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 600; }}
 
-/* ── STAT CARD ── */
 .dark-stat-card {{ text-align: center; padding: 20px 10px; background: {C['surface']}; border-radius: 14px; border: 1px solid {C['border']}; }}
 .dark-stat-val {{ font-size: 32px; font-weight: 800; color: {C['primary']}; font-family: 'JetBrains Mono',monospace; }}
 .dark-stat-lbl {{ font-size: 13px; color: {C['text_muted']}; margin-top: 4px; }}
 
-/* ── CARD ── */
 .card {{ background: {C['surface']}; border-radius: var(--radius); padding: 18px 20px; border: 1px solid {C['border']}; margin-bottom: 14px; }}
-
-/* ── CATALOG TIGHT BUTTON ── */
-.catalog-btn-wrap {{ margin-top: 0 !important; padding-top: 0 !important; }}
 """
 
 st.markdown(f"<style>{DARK_VARS}{COMMON_CSS}</style>", unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────
-# HELPER: render catalog card sebagai st.markdown (tanpa iframe)
+# HELPER: render catalog card
 # ─────────────────────────────────────────────
 def render_catalog_card(key, data, in_krs):
     nama = key.replace("_", " ").title()
@@ -631,7 +601,6 @@ else:
         else '<div style="font-size:46px;">🎓</div>'
     )
 
-    # Header — teks putih karena gradient selalu gelap
     st.markdown(f"""
     <div class="header-banner">
         {logo_img}
@@ -682,7 +651,6 @@ else:
 
     # ═══════════════════════════════
     # TAB 2 — KATALOG
-    # Tombol mepet langsung di bawah card
     # ═══════════════════════════════
     with tab_catalog:
         st.markdown(f'<h3 style="color:{C["text"]};">📚 Katalog Mata Kuliah</h3>', unsafe_allow_html=True)
@@ -690,9 +658,12 @@ else:
         st.markdown("---")
 
         fc1, fc2, fc3 = st.columns([1, 1, 2])
-        with fc1: filter_kat = st.selectbox("Kategori", ["Semua", "Wajib", "Pilihan"])
-        with fc2: filter_sem = st.selectbox("Semester", ["Semua", "2", "4", "6", "8"])
-        with fc3: search_q   = st.text_input("🔍 Cari matkul atau dosen...", placeholder="contoh: web, Ramadhan, IoT")
+        with fc1:
+            filter_kat = st.selectbox("Kategori", ["Semua", "Wajib", "Pilihan"])
+        with fc2:
+            filter_sem = st.selectbox("Semester", ["Semua", "1", "2", "3", "4", "5", "6", "7", "8"])
+        with fc3:
+            search_q = st.text_input("🔍 Cari matkul atau dosen...", placeholder="contoh: web, Ramadhan, IoT")
 
         st.markdown("---")
 
@@ -906,6 +877,7 @@ bantuan                 → panduan ini
 - **Prasyarat:** Beberapa matkul butuh matkul lain di KRS
 - **Konflik:** Jadwal yang sama tidak bisa diambil bersamaan
 - **Data jadwal:** Real dari UPGRIS Sem. Genap 2025/2026
+- **Semester tersedia:** 1 hingga 8
 </div>
 """, unsafe_allow_html=True)
 

@@ -319,7 +319,7 @@ section[data-testid="stSidebar"] .sidebar-section-label {{
     text-align: center; padding: 2.5rem 2rem 1rem; position: relative;
 }}
 .landing-logo {{
-    width: 160px; height: 160px; object-fit: contain;
+    width: 300px; height: 200px; object-fit: contain;
     border-radius: 0; border: none; background: transparent; padding: 0;
     filter: drop-shadow(0 6px 24px rgba(79,158,255,.3)); margin-bottom: 22px;
     animation: floatLogo 4s ease-in-out infinite alternate;
@@ -412,10 +412,10 @@ with st.sidebar:
 
     st.markdown(f'<div class="sidebar-section-label">🧭 Navigasi</div>', unsafe_allow_html=True)
     if st.session_state.show_landing:
-        if st.button("🚀 Masuk ke Aplikasi", use_container_width=True, type="primary"):
+        if st.button("Masuk ke Aplikasi", use_container_width=True, type="primary"):
             st.session_state.show_landing = False; st.rerun()
     else:
-        if st.button("🏠 Kembali ke Beranda", use_container_width=True):
+        if st.button("Kembali ke Beranda", use_container_width=True):
             st.session_state.show_landing = True; st.rerun()
 
     if not st.session_state.show_landing:
@@ -497,7 +497,7 @@ with st.sidebar:
                 st.rerun()
 
     st.markdown("---")
-    st.caption("SIKRS 2026 · Universitas PGRI Semarang\nPowered by Rahul Candra")
+    st.caption("SIKRS 2026 · Powered by Rahul Candra\nUniversitas PGRI Semarang")
 
 
 # ═════════════════════════════════════════════
@@ -507,7 +507,7 @@ if st.session_state.show_landing:
     logo_html = (
         f'<img src="data:image/png;base64,{UPGRIS_LOGO_B64}" class="landing-logo" alt="Logo UPGRIS" />'
         if UPGRIS_LOGO_B64
-        else '<div style="font-size:100px;margin-bottom:20px;">🎓</div>'
+        else '<div style="font-size:x;margin-bottom:100px;">🎓</div>'
     )
 
     st.markdown(f"""
@@ -516,11 +516,11 @@ if st.session_state.show_landing:
         <h1 class="landing-title">Susun KRS Lebih<br><span class="blue">Cerdas</span> & <span class="teal">Cepat</span></h1>
         <p class="landing-sub">
             SIKRS adalah chatbot akademik berbasis <strong>Finite State Machine</strong>
-            yang membantu mahasiswa Teknik Informatika UPGRIS menyusun KRS dengan data jadwal
-            real, validasi prasyarat, deteksi konflik jadwal, dan tips belajar otomatis.
+            yang membantu mahasiswa Program Studi Teknik Informatika Universitas PGRI Semarang
+            menyusun KRS dengan data jadwal real, validasi prasyarat, deteksi konflik jadwal, dan tips belajar otomatis.
         </p>
         <div class="landing-tags">
-            <span class="landing-tag">🤖 NLP Engine</span>
+            <span class="landing-tag">🤖  Chatbot NLP Engine</span>
             <span class="landing-tag">⚡ Validasi Real-time</span>
             <span class="landing-tag">📅 Data Jadwal Resmi</span>
             <span class="landing-tag">🎯 Rekomendasi Cerdas</span>
@@ -537,10 +537,10 @@ if st.session_state.show_landing:
 
     st.markdown("---")
     st.markdown(f'<h3 style="color:{C["text"]};">✨ Fitur Unggulan SIKRS</h3>', unsafe_allow_html=True)
-    st.markdown(f'<p style="color:{C["text_muted"]};font-size:14px;margin-bottom:16px;">Klik setiap fitur untuk melihat detail</p>', unsafe_allow_html=True)
+    st.markdown(f'<p style="color:{C["text_muted"]};font-size:14px;margin-bottom:16px;">Klik setiap fitur untuk melihat detail dari keunggulan chatbot ini!</p>', unsafe_allow_html=True)
 
     features = [
-        ("🤖","Chatbot NLP Pintar","Pahami perintah natural bahasa Indonesia","Baru",
+        ("🤖","Chatbot NLP","Pahami perintah natural bahasa Indonesia","Baru",
          "Ketik perintah seperti <b>'ambil struktur data'</b> atau <b>'rekomen matkul'</b>. NLP Engine berbasis Regex mengenali sinonim dan variasi penulisan nama matkul secara otomatis."),
         ("⚠️","Validasi Real-time","Cek prasyarat, konflik jadwal & batas 24 SKS","Wajib",
          "Sistem otomatis memeriksa prasyarat, bentrokan jadwal, dan kapasitas SKS setiap kali Anda menambah mata kuliah."),
@@ -579,7 +579,7 @@ if st.session_state.show_landing:
     st.markdown("---")
     cta2 = st.columns([1, 2, 1])
     with cta2[1]:
-        if st.button("🚀 Mulai Sekarang!", use_container_width=True, type="primary"):
+        if st.button("Mulai Sekarang!", use_container_width=True, type="primary"):
             st.session_state.show_landing = False; st.rerun()
 
     st.markdown(

@@ -1,443 +1,626 @@
-from enum import Enum, auto
-from nlp_engine import AcademicNLPEngine
+import re
 import random
+from enum import Enum, auto
 
+ACADEMIC_FACTS = [
+    "📊 Teknik Pomodoro: 25 menit belajar, 5 menit istirahat — terbukti meningkatkan fokus hingga 40%.",
+    "🧠 Spaced Repetition: Mengulang materi di interval tertentu jauh lebih efektif daripada belajar sekaligus.",
+    "✍️ Menulis catatan tangan meningkatkan retensi memori lebih baik dibanding mengetik.",
+    "🤝 Belajar kelompok efektif untuk matkul berbasis konsep; belajar mandiri lebih baik untuk coding.",
+    "💤 Tidur cukup 7–8 jam setelah belajar membantu konsolidasi memori jangka panjang.",
+    "🎯 Mulai dengan matkul tersulit di pagi hari saat energi dan fokus masih optimal.",
+    "📱 Mode fokus (matikan notif) terbukti meningkatkan produktivitas belajar hingga 23%.",
+    "🔁 Mengajarkan materi ke orang lain (Feynman Technique) adalah cara paling efektif memahami konsep.",
+]
 
 class State(Enum):
-    IDLE         = auto()
-    BROWSING     = auto()
-    CONFIRMATION = auto()
-    SUBMITTED    = auto()
+    GREETING   = auto()
+    BROWSING   = auto()
+    CONFIRM    = auto()
+    DONE       = auto()
 
+class NLPEngine:
+    MAX_SKS = 24
 
-# Fakta / trivia akademik yang ditampilkan secara random
-ACADEMIC_FACTS = [
-    "💡 Mahasiswa yang tidur 7–8 jam semalam sebelum ujian rata-rata mendapat nilai 15% lebih tinggi.",
-    "📚 Metode Pomodoro (25 menit belajar, 5 menit istirahat) terbukti meningkatkan fokus hingga 40%.",
-    "🧠 Belajar dengan mengajari orang lain (Feynman Technique) adalah cara paling efektif menguasai materi.",
-    "⏰ Puncak konsentrasi otak manusia terjadi antara pukul 09.00–11.00 dan 14.00–16.00.",
-    "🎯 Membuat rangkuman tulis tangan meningkatkan retensi ingatan 3× lebih baik dari mengetik.",
-    "☕ Kafein meningkatkan fokus jangka pendek, tapi tidur berkualitas jauh lebih efektif jangka panjang.",
-]
+    # Semua matkul dari data jadwal (bukan KKN/KKL/TA/Kuliah Kerja Lapangan)
+    course_data = {
+        # ── SEMESTER 2 (dari data) ──
+        "kalkulus_integral": {
+            "kode": "TI-201", "sks": 2, "semester": 2,
+            "emoji": "📐", "kategori": "Wajib",
+            "desc": "Diferensial, integral, dan limit fungsi untuk mahasiswa teknik informatika.",
+            "jadwal": "Jumat 18:30", "ruang": "GP 607",
+            "dosen": "Rizky Esti Utami",
+            "prereq": [], "difficulty": 4,
+            "tips": "Latihan soal minimal 10 soal per hari. Gunakan Wolfram Alpha untuk cek jawaban."
+        },
+        "sistem_operasi": {
+            "kode": "TI-202", "sks": 2, "semester": 2,
+            "emoji": "🖥️", "kategori": "Wajib",
+            "desc": "Konsep OS, manajemen proses, memori, dan sistem file.",
+            "jadwal": "Rabu 20:10", "ruang": "GU 301",
+            "dosen": "Ramadhan Renaldy",
+            "prereq": [], "difficulty": 3,
+            "tips": "Praktikkan di Linux/VirtualBox. Baca 'Operating System Concepts' oleh Silberschatz."
+        },
+        "struktur_data": {
+            "kode": "TI-203", "sks": 3, "semester": 2,
+            "emoji": "🗂️", "kategori": "Wajib",
+            "desc": "Array, linked list, stack, queue, tree, graph, dan algoritma sorting/searching.",
+            "jadwal": "Selasa 18:30", "ruang": "GU 301",
+            "dosen": "Ramadhan Renaldy",
+            "prereq": [], "difficulty": 4,
+            "tips": "Visualisasikan struktur data dengan VisuAlgo. Implementasikan sendiri dari nol."
+        },
+        "pemrograman_komputer": {
+            "kode": "TI-204", "sks": 3, "semester": 2,
+            "emoji": "💻", "kategori": "Wajib",
+            "desc": "Dasar pemrograman prosedural, OOP, dan pemecahan masalah komputasi.",
+            "jadwal": "Kamis 19:20", "ruang": "GU 401",
+            "dosen": "Nugroho D. S.",
+            "prereq": [], "difficulty": 3,
+            "tips": "Kerjakan minimal 1 program latihan per hari. Manfaatkan LeetCode untuk latihan."
+        },
+        "berbicara": {
+            "kode": "BHS-201", "sks": 2, "semester": 2,
+            "emoji": "🗣️", "kategori": "Wajib",
+            "desc": "Keterampilan berbicara efektif dalam konteks akademik dan profesional.",
+            "jadwal": "Senin 09:10", "ruang": "A.307",
+            "dosen": "Sri Suciati",
+            "prereq": [], "difficulty": 2,
+            "tips": "Latih public speaking di depan cermin. Rekam diri sendiri untuk evaluasi."
+        },
+        "ke_pgri_an": {
+            "kode": "UPGRIS-201", "sks": 2, "semester": 2,
+            "emoji": "🏫", "kategori": "Wajib",
+            "desc": "Wawasan sejarah, visi, misi, dan nilai-nilai Universitas PGRI Semarang.",
+            "jadwal": "Jumat 20:10", "ruang": "GD 412",
+            "dosen": "Hari Waluyo",
+            "prereq": [], "difficulty": 1,
+            "tips": "Pahami sejarah PGRI dan UPGRIS. Ikuti kegiatan kemahasiswaan untuk nilai plus."
+        },
+        "bahasa_indonesia": {
+            "kode": "MPK-201", "sks": 2, "semester": 2,
+            "emoji": "🇮🇩", "kategori": "Wajib",
+            "desc": "Kaidah bahasa Indonesia baku untuk keperluan akademik dan penulisan ilmiah.",
+            "jadwal": "Kamis 07:30", "ruang": "GP 601",
+            "dosen": "Siti Ulfiyani",
+            "prereq": [], "difficulty": 2,
+            "tips": "Baca KBBI dan EYD. Latih menulis esai ilmiah minimal 1 per minggu."
+        },
+        "bahasa_inggris": {
+            "kode": "MPK-202", "sks": 2, "semester": 2,
+            "emoji": "🇬🇧", "kategori": "Wajib",
+            "desc": "Bahasa Inggris untuk komunikasi teknik dan membaca literatur ilmiah.",
+            "jadwal": "Kamis 16:20", "ruang": "B 504",
+            "dosen": "Jafar Sodiq",
+            "prereq": [], "difficulty": 2,
+            "tips": "Biasakan membaca dokumentasi teknis dalam bahasa Inggris. Gunakan Duolingo harian."
+        },
+        # ── SEMESTER 4 ──
+        "matematika_diskrit": {
+            "kode": "TI-401", "sks": 3, "semester": 4,
+            "emoji": "🔢", "kategori": "Wajib",
+            "desc": "Logika, himpunan, relasi, fungsi, kombinatorik, graf, dan teori bilangan.",
+            "jadwal": "Rabu 10:00", "ruang": "GP 607",
+            "dosen": "Agung Handayanto",
+            "prereq": ["kalkulus_integral"], "difficulty": 4,
+            "tips": "Buat mind map untuk setiap topik. Latihan soal logika dan graf setiap hari."
+        },
+        "analisis_dan_perancangan_sistem": {
+            "kode": "TI-402", "sks": 3, "semester": 4,
+            "emoji": "📊", "kategori": "Wajib",
+            "desc": "Metodologi pengembangan sistem, DFD, ERD, dan dokumentasi analisis kebutuhan.",
+            "jadwal": "Selasa 07:30", "ruang": "GP 401",
+            "dosen": "Bambang Agus Herlambang",
+            "prereq": ["pemrograman_komputer"], "difficulty": 3,
+            "tips": "Pelajari tools seperti draw.io dan Lucidchart. Buat studi kasus nyata."
+        },
+        "pemrograman_web": {
+            "kode": "TI-403", "sks": 3, "semester": 4,
+            "emoji": "🌐", "kategori": "Wajib",
+            "desc": "HTML, CSS, JavaScript, PHP, dan framework web modern untuk pengembangan aplikasi.",
+            "jadwal": "Kamis 10:00", "ruang": "GU 401",
+            "dosen": "Aris Tri Joko Harjanto",
+            "prereq": ["pemrograman_komputer"], "difficulty": 3,
+            "tips": "Buat portofolio web pribadi. Ikuti tutorial di freeCodeCamp dan MDN Web Docs."
+        },
+        "metode_numerik": {
+            "kode": "TI-404", "sks": 2, "semester": 4,
+            "emoji": "🔬", "kategori": "Wajib",
+            "desc": "Algoritma numerik untuk penyelesaian persamaan, interpolasi, dan integrasi numerik.",
+            "jadwal": "Rabu 13:00", "ruang": "GP 607",
+            "dosen": "Agung Handayanto",
+            "prereq": ["kalkulus_integral"], "difficulty": 4,
+            "tips": "Implementasikan algoritma dalam Python/MATLAB. Gunakan NumPy untuk verifikasi."
+        },
+        "decission_support_system": {
+            "kode": "TI-405", "sks": 3, "semester": 4,
+            "emoji": "🎯", "kategori": "Wajib",
+            "desc": "Sistem pendukung keputusan, metode TOPSIS, AHP, SAW, dan fuzzy logic.",
+            "jadwal": "Senin 13:00", "ruang": "GP 608",
+            "dosen": "Setyoningsih Wibowo",
+            "prereq": ["struktur_data"], "difficulty": 3,
+            "tips": "Implementasikan metode DSS dalam studi kasus nyata. Buat perbandingan antar metode."
+        },
+        "teknologi_animasi": {
+            "kode": "TI-406", "sks": 3, "semester": 4,
+            "emoji": "🎬", "kategori": "Wajib",
+            "desc": "Prinsip animasi, 2D/3D animation, motion graphics, dan tools animasi digital.",
+            "jadwal": "Jumat 13:00", "ruang": "GU 401",
+            "dosen": "Febrian Murti Dewanto",
+            "prereq": [], "difficulty": 3,
+            "tips": "Kuasai Adobe Animate atau Blender. Buat portofolio animasi pendek sebagai latihan."
+        },
+        "internet_of_things": {
+            "kode": "TI-407", "sks": 3, "semester": 4,
+            "emoji": "📡", "kategori": "Wajib",
+            "desc": "Arsitektur IoT, sensor, aktuator, protokol komunikasi, dan platform IoT.",
+            "jadwal": "Senin 08:20", "ruang": "GP 609",
+            "dosen": "Noora Qotrun Nada",
+            "prereq": ["pemrograman_komputer"], "difficulty": 4,
+            "tips": "Praktikkan dengan Arduino/Raspberry Pi. Ikuti komunitas IoT Indonesia di Telegram."
+        },
+        "digital_marketing": {
+            "kode": "MAN-401", "sks": 2, "semester": 4,
+            "emoji": "📢", "kategori": "Pilihan",
+            "desc": "Strategi pemasaran digital, SEO, SEM, media sosial, dan analitik web.",
+            "jadwal": "Kamis 09:10", "ruang": "A.303",
+            "dosen": "Aryan Eka Prastya Nugraha",
+            "prereq": [], "difficulty": 2,
+            "tips": "Buat akun Google Analytics dan Google Search Console. Praktikkan kampanye kecil."
+        },
+        "studi_kelayakan_bisnis": {
+            "kode": "MAN-402", "sks": 2, "semester": 4,
+            "emoji": "📋", "kategori": "Pilihan",
+            "desc": "Analisis kelayakan bisnis dari aspek teknis, finansial, pasar, dan organisasi.",
+            "jadwal": "Rabu 13:00", "ruang": "A.LAB EKONOMI",
+            "dosen": "Dwi Prastiyo Hadi",
+            "prereq": [], "difficulty": 2,
+            "tips": "Pelajari template business plan. Analisis kasus startup lokal sebagai latihan."
+        },
+        "manajemen_sdm": {
+            "kode": "MAN-403", "sks": 2, "semester": 4,
+            "emoji": "👥", "kategori": "Pilihan",
+            "desc": "Perencanaan SDM, rekrutmen, pengembangan, kompensasi, dan hubungan industrial.",
+            "jadwal": "Selasa 14:40", "ruang": "A.303",
+            "dosen": "Dwi Prastiyo Hadi",
+            "prereq": [], "difficulty": 2,
+            "tips": "Hubungkan konsep MSDM dengan praktik di perusahaan teknologi seperti Google atau Tokopedia."
+        },
+        # ── SEMESTER 6 ──
+        "metodologi_penelitian": {
+            "kode": "TI-601", "sks": 2, "semester": 6,
+            "emoji": "🔍", "kategori": "Wajib",
+            "desc": "Metode penelitian ilmiah, penulisan proposal, tinjauan pustaka, dan analisis data.",
+            "jadwal": "Rabu 10:50", "ruang": "GP 608",
+            "dosen": "Mega Novita",
+            "prereq": [], "difficulty": 3,
+            "tips": "Gunakan Mendeley untuk manajemen referensi. Baca minimal 5 jurnal internasional per minggu."
+        },
+        "e_business": {
+            "kode": "TI-602", "sks": 3, "semester": 6,
+            "emoji": "🛒", "kategori": "Wajib",
+            "desc": "Model bisnis digital, e-commerce, payment gateway, keamanan transaksi online.",
+            "jadwal": "Senin 10:00", "ruang": "GU 401",
+            "dosen": "Saeful Fahmi",
+            "prereq": ["pemrograman_web"], "difficulty": 3,
+            "tips": "Pelajari Shopify, WooCommerce, dan Midtrans. Analisis model bisnis marketplace Indonesia."
+        },
+        "data_science": {
+            "kode": "TI-603", "sks": 3, "semester": 6,
+            "emoji": "📈", "kategori": "Wajib",
+            "desc": "Analisis data, machine learning dasar, visualisasi data, dan Python untuk data science.",
+            "jadwal": "Senin 13:00", "ruang": "GU 401",
+            "dosen": "Khoiriya Latifah / Konduru Kranthi Kumar",
+            "prereq": ["matematika_diskrit"], "difficulty": 5,
+            "tips": "Kuasai Python (Pandas, NumPy, Scikit-learn). Ikuti Kaggle competition untuk pengalaman nyata."
+        },
+        "teori_bahasa_dan_otomata": {
+            "kode": "TI-604", "sks": 3, "semester": 6,
+            "emoji": "🤖", "kategori": "Wajib",
+            "desc": "Automata, grammar formal, regular expression, pushdown automata, dan mesin Turing.",
+            "jadwal": "Jumat 09:10", "ruang": "GP 607",
+            "dosen": "Ramadhan Renaldy",
+            "prereq": ["matematika_diskrit"], "difficulty": 5,
+            "tips": "Visualisasikan automata dengan JFLAP. Buat implementasi regex engine sederhana."
+        },
+        "workshop_teknologi_informasi": {
+            "kode": "TI-605", "sks": 3, "semester": 6,
+            "emoji": "🛠️", "kategori": "Wajib",
+            "desc": "Workshop praktis pengembangan proyek teknologi informasi secara tim.",
+            "jadwal": "Jumat 17:10", "ruang": "GP 609",
+            "dosen": "Noora Qotrun Nada",
+            "prereq": ["pemrograman_web", "analisis_dan_perancangan_sistem"], "difficulty": 4,
+            "tips": "Gunakan Git/GitHub untuk kolaborasi tim. Dokumentasikan setiap sprint dengan baik."
+        },
+        "etika_profesi": {
+            "kode": "TI-606", "sks": 2, "semester": 6,
+            "emoji": "⚖️", "kategori": "Wajib",
+            "desc": "Etika profesi IT, kode etik programmer, hak kekayaan intelektual, dan cyberlaw.",
+            "jadwal": "Jumat 20:10", "ruang": "GP 608",
+            "dosen": "Noora Qotrun Nada",
+            "prereq": [], "difficulty": 2,
+            "tips": "Baca IEEE Code of Ethics dan UU ITE. Kaitkan dengan kasus nyata di dunia teknologi."
+        },
+        "pendidikan_pancasila": {
+            "kode": "MPK-601", "sks": 2, "semester": 6,
+            "emoji": "🦅", "kategori": "Wajib",
+            "desc": "Nilai-nilai Pancasila, implementasi dalam kehidupan berbangsa dan bernegara.",
+            "jadwal": "Rabu 10:50", "ruang": "GP 601",
+            "dosen": "Supriyono PS",
+            "prereq": [], "difficulty": 1,
+            "tips": "Kaitkan nilai Pancasila dengan etika dalam pengembangan teknologi dan AI."
+        },
+        # ── SEMESTER 8 ──
+        "sistem_multimedia_interaktif": {
+            "kode": "TI-801", "sks": 3, "semester": 8,
+            "emoji": "🎮", "kategori": "Pilihan",
+            "desc": "Desain multimedia interaktif, game development dasar, AR/VR, dan UX/UI.",
+            "jadwal": "Selasa 10:00", "ruang": "GU 401",
+            "dosen": "Febrian Murti Dewanto",
+            "prereq": ["teknologi_animasi"], "difficulty": 4,
+            "tips": "Kuasai Unity atau Godot untuk game. Pelajari prinsip UX dari Google Material Design."
+        },
+    }
+
+    # Sinonim untuk pengenalan perintah
+    SYNONYMS = {
+        "kalkulus_integral":              ["kalkulus", "kalkul", "integral", "matkal", "kal int"],
+        "sistem_operasi":                 ["so", "sistem operasi", "os", "sismop", "sis op"],
+        "struktur_data":                  ["strukdat", "struktur data", "sd", "strdat"],
+        "pemrograman_komputer":           ["pemkom", "pemrograman komputer", "progkom", "prokom"],
+        "berbicara":                      ["berbicara", "speaking bahasa indonesia"],
+        "ke_pgri_an":                     ["pgri", "ke-pgri-an", "kepgrian", "kepgri"],
+        "bahasa_indonesia":               ["bind", "bahasa indonesia", "b.ind", "b ind"],
+        "bahasa_inggris":                 ["bing", "bahasa inggris", "b.ing", "english"],
+        "matematika_diskrit":             ["matdis", "matematika diskrit", "diskrit", "mat diskrit"],
+        "analisis_dan_perancangan_sistem":["aps", "analisis perancangan sistem", "analsis", "anper"],
+        "pemrograman_web":                ["web", "pemweb", "progweb", "pemrograman web"],
+        "metode_numerik":                 ["numerik", "metnum", "menum", "met numerik"],
+        "decission_support_system":       ["dss", "decision support", "spk", "sistem pendukung keputusan"],
+        "teknologi_animasi":              ["animasi", "anim", "tekno anim", "teknologi animasi"],
+        "internet_of_things":             ["iot", "internet of things", "internet things"],
+        "digital_marketing":              ["digmar", "digital marketing", "dig mark", "marketing digital"],
+        "studi_kelayakan_bisnis":         ["skb", "studi kelayakan", "kelayakan bisnis"],
+        "manajemen_sdm":                  ["msdm", "manajemen sdm", "sdm", "hr"],
+        "metodologi_penelitian":          ["metpen", "metodologi penelitian", "metodologi", "met pen"],
+        "e_business":                     ["ebis", "e-business", "ebusiness", "e business"],
+        "data_science":                   ["ds", "data science", "datasci", "datascience"],
+        "teori_bahasa_dan_otomata":       ["tbo", "teori bahasa", "otomata", "automata"],
+        "workshop_teknologi_informasi":   ["workshop ti", "wti", "workshop teknologi", "workshop"],
+        "etika_profesi":                  ["etika", "etpro", "etika profesi"],
+        "pendidikan_pancasila":           ["pancasila", "pend pancasila", "ppkn pancasila"],
+        "sistem_multimedia_interaktif":   ["multimedia", "smi", "interaktif", "game dev"],
+    }
+
+    def identify_course(self, text: str):
+        text = text.lower()
+        for key, aliases in self.SYNONYMS.items():
+            for alias in aliases:
+                if alias in text:
+                    return key
+        return None
+
+    def parse_intent(self, text: str):
+        t = text.lower()
+        if re.search(r'\b(ambil|tambah|pilih|daftar|enroll|add|masukkan|mau)\b', t):
+            return "ADD"
+        if re.search(r'\b(hapus|buang|batalkan|cancel|remove|keluarkan|drop)\b', t):
+            return "REMOVE"
+        if re.search(r'\b(info|detail|jelaskan|tentang|apa itu|keterangan)\b', t):
+            return "INFO"
+        if re.search(r'\b(jadwal|schedule|waktu|kapan|jam)\b', t):
+            return "SCHEDULE"
+        if re.search(r'\b(tips|cara belajar|strategi|belajar)\b', t):
+            return "TIPS"
+        if re.search(r'\b(dosen|siapa pengajar|pengajar|siapa yang)\b', t):
+            return "DOSEN"
+        if re.search(r'\b(prasyarat|syarat|prerequisite|butuh)\b', t):
+            return "PREREQ"
+        if re.search(r'\b(sulit|susah|mudah|tingkat|level|difficulty)\b', t):
+            return "DIFFICULTY"
+        if re.search(r'\b(rekomen|rekomendasi|saran|suggest|pilihkan)\b', t):
+            return "RECOMMEND"
+        if re.search(r'\b(submit|kirim|selesai|konfirmasi|finalisasi)\b', t):
+            return "SUBMIT"
+        if re.search(r'\b(total|jumlah|berapa sks|sks saya)\b', t):
+            return "TOTAL_SKS"
+        if re.search(r'\b(krs|daftar matkul|matkul saya|isi krs)\b', t):
+            return "MY_KRS"
+        if re.search(r'\b(hapus semua|kosongkan|clear|reset krs)\b', t):
+            return "CLEAR"
+        if re.search(r'\b(menu|list|katalog|matkul apa|tersedia|daftar matkul)\b', t):
+            return "MENU"
+        if re.search(r'\b(bantuan|help|panduan|cara|petunjuk)\b', t):
+            return "HELP"
+        if re.search(r'\b(halo|hai|hello|hi|selamat|pagi|siang|malam)\b', t):
+            return "GREET"
+        return "UNKNOWN"
 
 
 class AcademicFSM:
     def __init__(self):
-        self.state          = State.IDLE
-        self.nlp            = AcademicNLPEngine()
-        self.cart           = []
-        self.response       = ""
-        self.submitted_krs  = None
-        self.notifications  = []   # antrian notifikasi
-        self.session_count  = 0    # jumlah interaksi
-        self.ratings        = {}   # course_key → int(1‑5)
+        self.state   = State.GREETING
+        self.cart    = []
+        self.nlp     = NLPEngine()
+        self._resp   = ""
+        self.notifications = []
 
-    # ── helpers ──────────────────────────────────────────────────────────────
-
-    def get_response(self):
-        return self.response
-
-    def total_sks(self):
-        return sum(c["sks"] for c in self.cart)
-
-    def get_catalog_text(self):
-        lines = ["📚 *Katalog Mata Kuliah Tersedia:*\n"]
-        semester_now = None
-        for key, data in self.nlp.course_data.items():
-            if data["semester"] != semester_now:
-                semester_now = data["semester"]
-                lines.append(f"\n*── Semester {semester_now} ──*")
-            nama = key.replace("_", " ").title()
-            stars = "⭐" * data["difficulty"]
-            lines.append(
-                f"{data['emoji']} *{nama}* ({data['kode']}) "
-                f"— {data['sks']} SKS | {data['kategori']} | {stars}\n"
-                f"   _{data['desc']}_\n"
-                f"   🕐 {data['jadwal']} · 👨‍🏫 {data['dosen']}\n"
-            )
-        lines.append(
-            "💡 Ketik *'ambil [nama matkul]'* untuk mendaftarkan, "
-            "atau *'info [nama matkul]'* untuk detail lengkap."
-        )
-        return "\n".join(lines)
-
-    def get_schedule_text(self):
-        if not self.cart:
-            return "📅 Belum ada mata kuliah di KRS Anda."
-        days_order = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]
-        by_day = {d: [] for d in days_order}
-        for c in self.cart:
-            for day in days_order:
-                if day in c["jadwal"]:
-                    by_day[day].append(c)
-                    break
-        lines = ["📅 *Jadwal Kuliah Anda:*\n"]
-        for day in days_order:
-            if not by_day[day]:
-                continue
-            lines.append(f"*{day}*")
-            for c in by_day[day]:
-                nama = c["course_key"].replace("_", " ").title()
-                jam  = c["jadwal"].split(" ", 1)[1] if " " in c["jadwal"] else c["jadwal"]
-                lines.append(
-                    f"  {c['emoji']} {nama} — {jam}\n"
-                    f"     📍 {c['ruang']} · 👨‍🏫 {c['dosen']}"
-                )
-            lines.append("")
-        return "\n".join(lines)
-
-    def check_conflict(self, new_course_key):
-        new = self.nlp.course_data[new_course_key]
-        for c in self.cart:
-            existing = self.nlp.course_data[c["course_key"]]
-            if existing["jadwal"] == new["jadwal"]:
-                return c["course_key"]
-        return None
-
-    def add_course(self, course_key):
-        data = self.nlp.course_data[course_key]
-        nama = course_key.replace("_", " ").title()
-
-        if any(c["course_key"] == course_key for c in self.cart):
-            return False, f"⚠️ *{nama}* sudah ada di KRS Anda."
-
-        if self.total_sks() + data["sks"] > self.nlp.MAX_SKS:
-            sisa = self.nlp.MAX_SKS - self.total_sks()
-            return False, (
-                f"❌ Tidak bisa menambahkan *{nama}* ({data['sks']} SKS).\n"
-                f"Sisa kapasitas SKS: {sisa} dari {self.nlp.MAX_SKS} SKS."
-            )
-
-        if data["prasyarat"]:
-            pr_key  = data["prasyarat"]
-            in_cart = any(c["course_key"] == pr_key for c in self.cart)
-            pr_nama = pr_key.replace("_", " ").title()
-            if not in_cart:
-                return False, (
-                    f"❌ *{nama}* memerlukan prasyarat: *{pr_nama}*.\n"
-                    f"Silakan tambahkan *{pr_nama}* terlebih dahulu."
-                )
-
-        conflict = self.check_conflict(course_key)
-        if conflict:
-            conflict_nama = conflict.replace("_", " ").title()
-            return False, (
-                f"❌ Jadwal *{nama}* bentrok dengan *{conflict_nama}*!\n"
-                f"Keduanya dijadwalkan pada: {data['jadwal']}."
-            )
-
-        self.cart.append({
-            "course_key": course_key,
-            "kode":       data["kode"],
-            "sks":        data["sks"],
-            "jadwal":     data["jadwal"],
-            "ruang":      data["ruang"],
-            "dosen":      data["dosen"],
-            "emoji":      data["emoji"],
-            "difficulty": data["difficulty"],
-            "tips":       data["tips"],
-        })
-        self.push_notification(f"✅ {nama} ditambahkan ke KRS")
-        return True, (
-            f"✅ *{nama}* ({data['sks']} SKS) berhasil ditambahkan!\n"
-            f"📊 Total SKS: {self.total_sks()}/{self.nlp.MAX_SKS}\n"
-            f"💡 Tips: _{data['tips']}_"
-        )
-
-    def remove_course(self, course_key):
-        nama   = course_key.replace("_", " ").title()
-        before = len(self.cart)
-        self.cart = [c for c in self.cart if c["course_key"] != course_key]
-        if len(self.cart) < before:
-            self.push_notification(f"🗑️ {nama} dihapus dari KRS")
-            return f"🗑️ *{nama}* berhasil dihapus dari KRS."
-        return f"⚠️ *{nama}* tidak ditemukan di KRS Anda."
-
-    def get_krs_summary(self):
-        if not self.cart:
-            return "📋 KRS Anda masih kosong."
-        lines = ["📋 *Ringkasan KRS Anda:*\n"]
-        total_diff = 0
-        for c in self.cart:
-            nama = c["course_key"].replace("_", " ").title()
-            stars = "⭐" * c.get("difficulty", 2)
-            lines.append(f"{c['emoji']} {nama} ({c['kode']}) — {c['sks']} SKS {stars}")
-            total_diff += c.get("difficulty", 2)
-        avg_diff = total_diff / len(self.cart) if self.cart else 0
-        diff_label = "Ringan 😊" if avg_diff < 2.5 else "Sedang 🤔" if avg_diff < 3.5 else "Berat 😤"
-        lines.append(f"\n📊 *Total SKS: {self.total_sks()} dari {self.nlp.MAX_SKS} SKS*")
-        lines.append(f"🎚️ *Beban belajar rata-rata: {diff_label}*")
-        return "\n".join(lines)
-
-    def push_notification(self, msg):
+    def _notify(self, msg):
         self.notifications.append(msg)
         if len(self.notifications) > 5:
             self.notifications.pop(0)
 
-    def get_notifications(self):
-        if not self.notifications:
-            return "🔔 Tidak ada notifikasi baru."
-        lines = ["🔔 *Notifikasi Terbaru:*\n"]
-        for n in reversed(self.notifications):
-            lines.append(f"• {n}")
+    def total_sks(self):
+        return sum(c["sks"] for c in self.cart)
+
+    def get_response(self):
+        return self._resp
+
+    def add_course(self, key: str):
+        data = self.nlp.course_data.get(key)
+        if not data:
+            return False, "❌ Mata kuliah tidak ditemukan."
+        if any(c["course_key"] == key for c in self.cart):
+            return False, f"⚠️ **{key.replace('_',' ').title()}** sudah ada di KRS kamu."
+        # Cek prasyarat
+        for pre in data["prereq"]:
+            if not any(c["course_key"] == pre for c in self.cart):
+                pre_name = pre.replace("_", " ").title()
+                return False, f"🔒 Tidak bisa menambahkan **{key.replace('_',' ').title()}** — prasyarat **{pre_name}** belum diambil."
+        # Cek konflik jadwal
+        for c in self.cart:
+            if c["jadwal"] == data["jadwal"]:
+                return False, f"⏰ Konflik jadwal! **{key.replace('_',' ').title()}** bentrok dengan **{c['course_key'].replace('_',' ').title()}** di jadwal {data['jadwal']}."
+        # Cek SKS
+        if self.total_sks() + data["sks"] > self.nlp.MAX_SKS:
+            return False, f"📊 Tidak bisa tambah! Total SKS akan melebihi batas maksimum {self.nlp.MAX_SKS} SKS."
+        self.cart.append({
+            "course_key": key, "kode": data["kode"], "sks": data["sks"],
+            "jadwal": data["jadwal"], "ruang": data["ruang"],
+            "dosen": data["dosen"], "emoji": data["emoji"],
+        })
+        self._notify(f"➕ Ditambahkan: {key.replace('_',' ').title()} ({data['sks']} SKS)")
+        return True, (
+            f"{data['emoji']} **{key.replace('_',' ').title()}** berhasil ditambahkan ke KRS!\n\n"
+            f"- 📅 Jadwal: {data['jadwal']}\n"
+            f"- 📍 Ruang: {data['ruang']}\n"
+            f"- 👨‍🏫 Dosen: {data['dosen']}\n"
+            f"- 📊 SKS: {data['sks']} | Total sekarang: **{self.total_sks() + 0} SKS**\n\n"
+            f"💡 *Tips: {data['tips']}*"
+        )
+
+    def remove_course(self, key: str):
+        before = len(self.cart)
+        self.cart = [c for c in self.cart if c["course_key"] != key]
+        if len(self.cart) < before:
+            self._notify(f"🗑️ Dihapus: {key.replace('_',' ').title()}")
+            return f"🗑️ **{key.replace('_',' ').title()}** berhasil dihapus dari KRS."
+        return f"⚠️ **{key.replace('_',' ').title()}** tidak ada di KRS kamu."
+
+    def step(self, user_input: str = ""):
+        if not user_input:
+            self._resp = self._greeting()
+            self.state = State.BROWSING
+            return
+
+        intent = self.nlp.parse_intent(user_input)
+        course = self.nlp.identify_course(user_input)
+
+        if self.state == State.DONE:
+            if re.search(r'\b(reset|mulai ulang|baru|lagi)\b', user_input.lower()):
+                self.cart = []
+                self.notifications = []
+                self.state = State.BROWSING
+                self._resp = "🔄 KRS direset. Silakan susun ulang dari awal!"
+            else:
+                self._resp = "✅ KRS sudah disubmit. Ketik **reset** untuk mulai ulang."
+            return
+
+        if self.state == State.CONFIRM:
+            if re.search(r'\b(ya|iya|yes|ok|setuju|konfirmasi|lanjut)\b', user_input.lower()):
+                self.state = State.DONE
+                self._notify("✅ KRS berhasil disubmit!")
+                self._resp = self._done_msg()
+            elif re.search(r'\b(tidak|batal|no|cancel|belum)\b', user_input.lower()):
+                self.state = State.BROWSING
+                self._resp = "↩️ Submit dibatalkan. KRS masih bisa diubah."
+            else:
+                self._resp = "❓ Ketik **ya** untuk konfirmasi submit atau **tidak** untuk batal."
+            return
+
+        # BROWSING state
+        if intent == "ADD" and course:
+            _, msg = self.add_course(course)
+            self._resp = msg
+        elif intent == "REMOVE" and course:
+            if re.search(r'\b(semua|all|hapus semua|clear)\b', user_input.lower()):
+                self.cart = []
+                self._resp = "🗑️ Semua mata kuliah dihapus dari KRS."
+            else:
+                self._resp = self.remove_course(course)
+        elif intent == "CLEAR":
+            self.cart = []
+            self._resp = "🗑️ KRS dikosongkan."
+        elif intent == "INFO" and course:
+            self._resp = self._info_msg(course)
+        elif intent == "SCHEDULE" and course:
+            d = self.nlp.course_data.get(course, {})
+            self._resp = f"📅 Jadwal **{course.replace('_',' ').title()}**: {d.get('jadwal','?')} di {d.get('ruang','?')}"
+        elif intent == "SCHEDULE":
+            self._resp = self._my_schedule()
+        elif intent == "TIPS" and course:
+            d = self.nlp.course_data.get(course, {})
+            self._resp = f"💡 Tips **{course.replace('_',' ').title()}**:\n{d.get('tips','Rajin belajar!')}"
+        elif intent == "DOSEN" and course:
+            d = self.nlp.course_data.get(course, {})
+            self._resp = f"👨‍🏫 Dosen **{course.replace('_',' ').title()}**: {d.get('dosen','?')} | Jadwal: {d.get('jadwal','?')}"
+        elif intent == "PREREQ" and course:
+            self._resp = self._prereq_msg(course)
+        elif intent == "DIFFICULTY" and course:
+            d = self.nlp.course_data.get(course, {})
+            stars = "⭐" * d.get("difficulty", 3)
+            self._resp = f"🎯 Tingkat kesulitan **{course.replace('_',' ').title()}**: {stars} ({d.get('difficulty',3)}/5)"
+        elif intent == "RECOMMEND":
+            self._resp = self._recommend()
+        elif intent == "SUBMIT":
+            if not self.cart:
+                self._resp = "📭 KRS masih kosong! Tambahkan dulu beberapa mata kuliah."
+            else:
+                self.state = State.CONFIRM
+                self._resp = self._confirm_msg()
+        elif intent == "TOTAL_SKS":
+            self._resp = f"📊 Total SKS kamu: **{self.total_sks()}** dari maksimum **{self.nlp.MAX_SKS} SKS** ({int(self.total_sks()/self.nlp.MAX_SKS*100)}% terisi)"
+        elif intent == "MY_KRS":
+            self._resp = self._my_krs()
+        elif intent == "MENU":
+            self._resp = self._menu_msg()
+        elif intent == "HELP":
+            self._resp = self._help_msg()
+        elif intent == "GREET":
+            self._resp = "👋 Halo! Saya SIKRS, asisten KRS kamu. Ketik **menu** untuk lihat daftar mata kuliah atau **bantuan** untuk panduan lengkap."
+        else:
+            self._resp = (
+                "🤔 Maaf, saya kurang paham. Coba perintah seperti:\n"
+                "- `ambil [nama matkul]`\n- `hapus [nama matkul]`\n- `info [nama matkul]`\n"
+                "- `rekomen` / `jadwal` / `submit KRS` / `bantuan`"
+            )
+
+    def _greeting(self):
+        return (
+            "🎓 **Selamat datang di SIKRS — Sistem Informasi KRS UPGRIS!**\n\n"
+            "Saya akan membantu kamu menyusun Kartu Rencana Studi Semester Genap 2025/2026.\n\n"
+            "**Apa yang bisa saya lakukan?**\n"
+            "- 📚 Tampilkan daftar mata kuliah\n"
+            "- ➕ Tambah/hapus matkul ke KRS\n"
+            "- ⚠️ Validasi prasyarat & konflik jadwal\n"
+            "- 🎯 Rekomendasikan matkul\n"
+            "- 💡 Beri tips belajar per matkul\n\n"
+            "Ketik **menu** untuk melihat semua mata kuliah, atau **bantuan** untuk panduan lengkap."
+        )
+
+    def _menu_msg(self):
+        lines = ["📚 **Daftar Mata Kuliah Tersedia:**\n"]
+        by_sem = {}
+        for k, v in self.nlp.course_data.items():
+            by_sem.setdefault(v["semester"], []).append((k, v))
+        for sem in sorted(by_sem):
+            lines.append(f"\n**Semester {sem}:**")
+            for k, v in by_sem[sem]:
+                in_krs = "✅" if any(c["course_key"] == k for c in self.cart) else "  "
+                lines.append(f"{in_krs} {v['emoji']} `{k.replace('_',' ').title()}` — {v['sks']} SKS | {v['jadwal']}")
+        lines.append(f"\n📊 Total SKS tersedia: {sum(v['sks'] for v in self.nlp.course_data.values())} SKS | Maks ambil: {self.nlp.MAX_SKS} SKS")
         return "\n".join(lines)
 
-    # ── main FSM step ─────────────────────────────────────────────────────────
+    def _info_msg(self, key):
+        d = self.nlp.course_data.get(key)
+        if not d:
+            return "❌ Matkul tidak ditemukan."
+        pre = ", ".join(p.replace("_"," ").title() for p in d["prereq"]) or "Tidak ada"
+        stars = "⭐" * d["difficulty"] + "☆" * (5 - d["difficulty"])
+        return (
+            f"{d['emoji']} **{key.replace('_',' ').title()}** ({d['kode']})\n\n"
+            f"📖 {d['desc']}\n\n"
+            f"- 📅 Jadwal: {d['jadwal']}\n"
+            f"- 📍 Ruang: {d['ruang']}\n"
+            f"- 👨‍🏫 Dosen: {d['dosen']}\n"
+            f"- 📊 SKS: {d['sks']} | Semester: {d['semester']}\n"
+            f"- 🏷️ Kategori: {d['kategori']}\n"
+            f"- 🔒 Prasyarat: {pre}\n"
+            f"- 🎯 Kesulitan: {stars}\n"
+            f"- 💡 Tips: *{d['tips']}*"
+        )
 
-    def step(self, user_input=""):
-        user_input       = user_input.strip()
-        self.session_count += 1
+    def _prereq_msg(self, key):
+        d = self.nlp.course_data.get(key)
+        if not d:
+            return "❌ Matkul tidak ditemukan."
+        if not d["prereq"]:
+            return f"✅ **{key.replace('_',' ').title()}** tidak punya prasyarat."
+        lines = [f"🔒 Prasyarat **{key.replace('_',' ').title()}**:"]
+        for p in d["prereq"]:
+            status = "✅ Sudah diambil" if any(c["course_key"] == p for c in self.cart) else "❌ Belum diambil"
+            lines.append(f"- {p.replace('_',' ').title()} → {status}")
+        return "\n".join(lines)
 
-        # Sapa pertama kali
-        if user_input == "" and self.state == State.IDLE:
-            self.state    = State.BROWSING
-            fact          = random.choice(ACADEMIC_FACTS)
-            self.response = (
-                "*Selamat datang di SIKRS — Chatbot KRS UPGRIS! 👋*\n\n"
-                "Saya siap membantu Anda menyusun Kartu Rencana Studi "
-                "dengan data jadwal resmi semester ini.\n\n"
-                "Yang bisa saya bantu:\n"
-                "• Lihat daftar matkul → ketik *'menu'*\n"
-                "• Tambah matkul → ketik *'ambil [nama matkul]'*\n"
-                "• Tips belajar → ketik *'tips [nama matkul]'*\n"
-                "• Rekomendasi matkul → ketik *'rekomen'*\n"
-                "• Lihat jadwal → ketik *'jadwal'*\n"
-                "• Submit KRS → ketik *'submit KRS'*\n\n"
-                f"📌 *Fakta Akademik Hari Ini:*\n{fact}\n\n"
-                "Ketik *'bantuan'* untuk panduan lengkap."
-            )
-            return
+    def _recommend(self):
+        taken = {c["course_key"] for c in self.cart}
+        taken_jadwal = {c["jadwal"] for c in self.cart}
+        recs = []
+        for k, v in self.nlp.course_data.items():
+            if k in taken: continue
+            if self.total_sks() + v["sks"] > self.nlp.MAX_SKS: continue
+            if v["jadwal"] in taken_jadwal: continue
+            prereq_ok = all(p in taken for p in v["prereq"])
+            if prereq_ok:
+                recs.append((k, v))
+        if not recs:
+            return "🤔 Tidak ada rekomendasi tersedia saat ini (SKS penuh atau semua prasyarat belum terpenuhi)."
+        random.shuffle(recs)
+        lines = ["🎯 **Rekomendasi Mata Kuliah untuk Kamu:**\n"]
+        for k, v in recs[:5]:
+            lines.append(f"- {v['emoji']} **{k.replace('_',' ').title()}** ({v['sks']} SKS) — {v['jadwal']} | {v['dosen']}")
+        lines.append(f"\nKetik `ambil [nama matkul]` untuk menambahkan ke KRS.")
+        return "\n".join(lines)
 
-        intent = self.nlp.detect_intent(user_input)
+    def _my_schedule(self):
+        if not self.cart:
+            return "📭 KRS masih kosong."
+        days = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"]
+        by_day = {d: [] for d in days}
+        for c in self.cart:
+            for d in days:
+                if d in c["jadwal"]:
+                    by_day[d].append(c); break
+        lines = ["📅 **Jadwal KRS Kamu:**\n"]
+        for d in days:
+            if by_day[d]:
+                lines.append(f"**{d}:**")
+                for c in by_day[d]:
+                    jam = c["jadwal"].split(" ",1)[1] if " " in c["jadwal"] else c["jadwal"]
+                    lines.append(f"  {c['emoji']} {c['course_key'].replace('_',' ').title()} — {jam} | {c['ruang']}")
+        return "\n".join(lines)
 
-        # ── intent global (semua state) ───────────────────────────────────────
-        if intent == "RESET_SYSTEM":
-            dark_mode = getattr(self, "_dark_mode", True)
-            self.__init__()
-            self.state    = State.BROWSING
-            self.response = "🔄 Sistem direset. Ketik *'menu'* untuk mulai."
-            return
+    def _my_krs(self):
+        if not self.cart:
+            return "📭 KRS masih kosong. Tambahkan matkul dengan perintah `ambil [nama matkul]`."
+        lines = [f"📋 **KRS Kamu ({self.total_sks()}/{self.nlp.MAX_SKS} SKS):**\n"]
+        for c in self.cart:
+            lines.append(f"- {c['emoji']} **{c['course_key'].replace('_',' ').title()}** ({c['sks']} SKS) — {c['jadwal']}")
+        return "\n".join(lines)
 
-        if intent == "GREETING":
-            greetings = [
-                f"👋 Halo! Siap bantu susun KRS Anda. Ketik *'menu'* untuk lihat daftar matkul.",
-                f"😊 Hai! Ada yang bisa saya bantu? Coba ketik *'rekomendasi'* untuk saran matkul.",
-                f"🎓 Halo! Ingat, batas SKS semester ini {self.nlp.MAX_SKS} SKS. Ketik *'menu'* untuk mulai!",
-            ]
-            self.response = random.choice(greetings)
-            return
+    def _confirm_msg(self):
+        lines = [f"📋 **Konfirmasi Submit KRS ({self.total_sks()} SKS):**\n"]
+        for c in self.cart:
+            lines.append(f"- {c['emoji']} {c['course_key'].replace('_',' ').title()} ({c['sks']} SKS)")
+        lines.append("\nKetik **ya** untuk submit atau **tidak** untuk batal.")
+        return "\n".join(lines)
 
-        if intent == "HELP":
-            self.response = (
-                "📖 *Panduan Lengkap SIKRS:*\n\n"
-                "🔍 *Informasi Matkul:*\n"
-                "• `menu` — Daftar semua matkul\n"
-                "• `info web` — Detail matkul pemrograman web\n"
-                "• `prasyarat aps` — Cek prasyarat APS\n"
-                "• `tips iot` — Tips belajar IoT\n"
-                "• `dosen matdis` — Info dosen Matematika Diskrit\n"
-                "• `susah matdis` — Tingkat kesulitan matkul\n\n"
-                "➕ *Kelola KRS:*\n"
-                "• `ambil struktur data` — Tambah ke KRS\n"
-                "• `hapus sistem operasi` — Hapus dari KRS\n"
-                "• `hapus semua` — Kosongkan KRS\n"
-                "• `krs saya` — Ringkasan KRS\n\n"
-                "🤖 *Fitur Cerdas:*\n"
-                "• `rekomen` — Rekomendasi matkul untukmu\n"
-                "• `notifikasi` — Lihat notifikasi terbaru\n"
-                "• `total sks` — Cek kapasitas SKS\n\n"
-                "📤 *Submit:*\n"
-                "• `submit KRS` — Konfirmasi & kirim KRS\n"
-                "• `reset` — Mulai ulang dari awal"
-            )
-            return
+    def _done_msg(self):
+        return (
+            "🎉 **KRS berhasil disubmit!**\n\n"
+            f"Total: **{self.total_sks()} SKS** dalam {len(self.cart)} mata kuliah.\n\n"
+            "Semangat belajar semester ini! 💪\n"
+            "Ketik **reset** jika ingin mulai ulang."
+        )
 
-        # ── STATE: BROWSING ───────────────────────────────────────────────────
-        if self.state == State.BROWSING:
-
-            if intent == "ASK_MENU":
-                self.response = self.get_catalog_text()
-
-            elif intent == "ASK_SCHEDULE":
-                self.response = self.get_schedule_text()
-
-            elif intent == "ASK_SKS":
-                pct    = int(self.total_sks() / self.nlp.MAX_SKS * 100)
-                status = "🔴 Hampir penuh!" if pct >= 90 else "🟡 Mendekati batas." if pct >= 70 else "🟢 Masih aman."
-                self.response = (
-                    f"📊 SKS diambil: *{self.total_sks()} SKS* {status}\n"
-                    f"Kapasitas: *{self.nlp.MAX_SKS} SKS*\n"
-                    f"Sisa: *{self.nlp.MAX_SKS - self.total_sks()} SKS*\n"
-                    f"Progres: [{('█' * (pct // 10)).ljust(10, '░')}] {pct}%"
-                )
-
-            elif intent == "ASK_PREREQ":
-                course_key = self.nlp.resolve_course_name(user_input)
-                if course_key:
-                    data    = self.nlp.course_data[course_key]
-                    nama    = course_key.replace("_", " ").title()
-                    if data["prasyarat"]:
-                        pr_nama = data["prasyarat"].replace("_", " ").title()
-                        in_cart = any(c["course_key"] == data["prasyarat"] for c in self.cart)
-                        status  = "✅ Sudah ada di KRS Anda!" if in_cart else "⚠️ Belum ada di KRS."
-                        self.response = f"📋 Prasyarat *{nama}*: *{pr_nama}*\n{status}"
-                    else:
-                        self.response = f"✅ *{nama}* tidak memiliki prasyarat. Bisa langsung diambil!"
-                else:
-                    self.response = "Matkul apa yang ingin dicek prasyaratnya?\nContoh: *'prasyarat web'*"
-
-            elif intent == "ASK_LECTURER":
-                course_key = self.nlp.resolve_course_name(user_input)
-                if course_key:
-                    data = self.nlp.course_data[course_key]
-                    nama = course_key.replace("_", " ").title()
-                    self.response = (
-                        f"👨‍🏫 Dosen *{nama}*: *{data['dosen']}*\n"
-                        f"📅 Jadwal: {data['jadwal']} | 📍 Ruang: {data['ruang']}"
-                    )
-                else:
-                    self.response = "Matkul apa yang ingin dicek dosennya?\nContoh: *'dosen matdis'*"
-
-            elif intent == "ASK_TIPS":
-                course_key = self.nlp.resolve_course_name(user_input)
-                if course_key:
-                    data = self.nlp.course_data[course_key]
-                    nama = course_key.replace("_", " ").title()
-                    self.response = f"💡 *Tips belajar {nama}:*\n\n_{data['tips']}_"
-                else:
-                    self.response = f"💡 *Tips Akademik:*\n\n{random.choice(ACADEMIC_FACTS)}"
-
-            elif intent == "ASK_DIFFICULTY":
-                course_key = self.nlp.resolve_course_name(user_input)
-                if course_key:
-                    data   = self.nlp.course_data[course_key]
-                    nama   = course_key.replace("_", " ").title()
-                    stars  = "⭐" * data["difficulty"] + "☆" * (5 - data["difficulty"])
-                    labels = {1: "Sangat mudah", 2: "Mudah", 3: "Sedang", 4: "Sulit", 5: "Sangat sulit"}
-                    self.response = (
-                        f"🎚️ Tingkat kesulitan *{nama}*:\n"
-                        f"{stars} — {labels[data['difficulty']]} ({data['difficulty']}/5)\n\n"
-                        f"💡 _{data['tips']}_"
-                    )
-                else:
-                    lines = ["🎚️ *Peringkat Kesulitan Matkul:*\n"]
-                    sorted_courses = sorted(
-                        self.nlp.course_data.items(),
-                        key=lambda x: -x[1]["difficulty"]
-                    )
-                    for key, data in sorted_courses:
-                        nama  = key.replace("_", " ").title()
-                        stars = "⭐" * data["difficulty"]
-                        lines.append(f"{data['emoji']} {nama} — {stars}")
-                    self.response = "\n".join(lines)
-
-            elif intent == "ASK_WAJIB":
-                wajib   = [(k, d) for k, d in self.nlp.course_data.items() if d["kategori"] == "Wajib"]
-                pilihan = [(k, d) for k, d in self.nlp.course_data.items() if d["kategori"] == "Pilihan"]
-                lines   = ["📚 *Kategori Mata Kuliah:*\n\n*Wajib:*"]
-                for k, d in wajib:
-                    lines.append(f"  {d['emoji']} {k.replace('_', ' ').title()} ({d['sks']} SKS)")
-                lines.append("\n*Pilihan:*")
-                for k, d in pilihan:
-                    lines.append(f"  {d['emoji']} {k.replace('_', ' ').title()} ({d['sks']} SKS)")
-                self.response = "\n".join(lines)
-
-            elif intent == "ASK_REKOMENDASI":
-                recs = self.nlp.get_recommendations(self.cart)
-                if not recs:
-                    self.response = "🎉 Semua matkul yang tersedia sudah ada di KRS Anda!"
-                else:
-                    lines = ["🤖 *Rekomendasi Matkul untuk Anda:*\n"]
-                    for key, data in recs:
-                        nama = key.replace("_", " ").title()
-                        stars = "⭐" * data["difficulty"]
-                        lines.append(
-                            f"{data['emoji']} *{nama}* ({data['sks']} SKS) — {stars}\n"
-                            f"   {data['jadwal']} · {data['dosen']}\n"
-                            f"   💡 _{data['tips']}_\n"
-                        )
-                    lines.append("Ketik *'ambil [nama matkul]'* untuk mendaftarkan.")
-                    self.response = "\n".join(lines)
-
-            elif intent == "ASK_SUMMARY":
-                self.response = self.get_krs_summary()
-
-            elif user_input.lower() in ("notifikasi", "notif", "notification"):
-                self.response = self.get_notifications()
-
-            elif intent == "CANCEL_ALL":
-                self.cart     = []
-                self.push_notification("🗑️ Semua matkul dihapus dari KRS")
-                self.response = "🗑️ Semua mata kuliah berhasil dihapus dari KRS."
-
-            elif intent == "REMOVE_ITEM":
-                course_key = self.nlp.resolve_course_name(user_input)
-                if course_key:
-                    self.response = self.remove_course(course_key)
-                else:
-                    self.response = "Matkul apa yang ingin dihapus?\nContoh: *'hapus matdis'*"
-
-            elif intent == "CHECKOUT":
-                if not self.cart:
-                    self.response = "🛒 KRS kosong. Silakan tambahkan matkul terlebih dahulu."
-                else:
-                    self.state    = State.CONFIRMATION
-                    self.response = (
-                        f"{self.get_krs_summary()}\n\n"
-                        f"❓ Yakin ingin men-submit KRS ini? Ketik *Ya* atau *Tidak*."
-                    )
-
-            elif intent in ("ADD_COURSE", "UNKNOWN"):
-                course_key = self.nlp.resolve_course_name(user_input)
-                if course_key:
-                    if intent == "UNKNOWN":
-                        self.response  = self.nlp.get_course_info_text(course_key)
-                        nama           = course_key.replace("_", " ").title()
-                        self.response += f"\n\n💡 Ketik *'ambil {nama}'* untuk menambahkan ke KRS."
-                    else:
-                        success, msg   = self.add_course(course_key)
-                        self.response  = msg
-                        if success and self.session_count % 3 == 0:
-                            self.response += f"\n\n{random.choice(ACADEMIC_FACTS)}"
-                else:
-                    self.response = (
-                        "❓ Saya tidak mengerti perintah itu. Coba:\n"
-                        "• *'menu'* — lihat daftar matkul\n"
-                        "• *'rekomen'* — rekomendasi matkul\n"
-                        "• *'bantuan'* — panduan lengkap"
-                    )
-
-            else:
-                self.response = (
-                    "❓ Perintah tidak dikenali.\n"
-                    "Ketik *'bantuan'* untuk panduan, atau *'menu'* untuk lihat matkul."
-                )
-
-        # ── STATE: CONFIRMATION ───────────────────────────────────────────────
-        elif self.state == State.CONFIRMATION:
-            if intent == "YES":
-                self.state        = State.SUBMITTED
-                self.submitted_krs = list(self.cart)
-                self.push_notification("📤 KRS berhasil disubmit!")
-                self.response = (
-                    f"🎉 *KRS Berhasil Disubmit!*\n\n"
-                    f"{self.get_krs_summary()}\n\n"
-                    f"📨 Konfirmasi dikirim ke email mahasiswa Anda.\n"
-                    f"Verifikasi akademik dalam 1×24 jam.\n\n"
-                    f"{random.choice(ACADEMIC_FACTS)}\n\n"
-                    f"Ketik *'reset'* untuk memulai sesi baru."
-                )
-                self.cart = []
-            elif intent == "NO":
-                self.state    = State.BROWSING
-                self.response = "↩️ Dibatalkan. Silakan ubah pilihan matkul Anda."
-            else:
-                self.response = "Ketik *'Ya'* untuk konfirmasi submit, atau *'Tidak'* untuk kembali."
-
-        # ── STATE: SUBMITTED ──────────────────────────────────────────────────
-        elif self.state == State.SUBMITTED:
-            self.response = (
-                "✅ KRS sudah disubmit!\n"
-                f"{random.choice(ACADEMIC_FACTS)}\n\n"
-                "Ketik *'reset'* untuk memulai sesi baru."
-            )
+    def _help_msg(self):
+        return (
+            "❓ **Panduan Penggunaan SIKRS:**\n\n"
+            "**Mengelola KRS:**\n"
+            "- `menu` → daftar semua matkul\n"
+            "- `ambil [matkul]` → tambah ke KRS\n"
+            "- `hapus [matkul]` → hapus dari KRS\n"
+            "- `hapus semua` → kosongkan KRS\n"
+            "- `krs saya` → ringkasan KRS\n"
+            "- `total sks` → cek kapasitas SKS\n"
+            "- `submit KRS` → finalisasi dan kirim KRS\n\n"
+            "**Informasi Matkul:**\n"
+            "- `info [matkul]` → detail lengkap\n"
+            "- `jadwal [matkul]` → jadwal & ruangan\n"
+            "- `dosen [matkul]` → info dosen\n"
+            "- `prasyarat [matkul]` → cek syarat\n"
+            "- `tips [matkul]` → tips belajar\n"
+            "- `rekomen` → rekomendasi matkul\n"
+        )

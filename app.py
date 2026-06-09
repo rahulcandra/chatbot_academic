@@ -3,7 +3,6 @@ import os
 import random
 import requests
 import streamlit as st
-import streamlit.components.v1 as components
 from academic_fsm import AcademicFSM, State, ACADEMIC_FACTS
 
 # ── Logo ──────────────────────────────────────────────────────────────────────
@@ -57,6 +56,11 @@ if is_dark:
         "text":         "#e8f0fe",
         "text_muted":   "#7fa8d0",
         "text_faint":   "#3d5875",
+        # Banner
+        "banner_title":  "#ffffff",
+        "banner_sub":    "rgba(255,255,255,0.85)",
+        "sidebar_title": "#ffffff",
+        "sidebar_sub":   "rgba(255,255,255,0.75)",
     }
 else:
     COLORS = {
@@ -76,6 +80,11 @@ else:
         "text":         "#1e2d45",
         "text_muted":   "#5a789e",
         "text_faint":   "#9ab3cc",
+        # Banner - light mode needs white on gradient background
+        "banner_title":  "#ffffff",
+        "banner_sub":    "rgba(255,255,255,0.9)",
+        "sidebar_title": "#ffffff",
+        "sidebar_sub":   "rgba(255,255,255,0.85)",
     }
 
 C = COLORS
@@ -251,9 +260,9 @@ section[data-testid="stSidebar"]>div {{ padding: 1.4rem 1.1rem !important; }}
     margin-bottom: 14px; position: relative; overflow: hidden;
     box-shadow: 0 4px 24px rgba(26,86,219,.35);
 }}
-.sidebar-profile-title {{ font-size: 14px; font-weight: 700; color: white !important; margin: 0; }}
-.sidebar-profile-sub {{ font-size: 11px; color: rgba(255,255,255,.75) !important; margin: 3px 0 0; }}
-.sidebar-profile * {{ color: white !important; }}
+.sidebar-profile-title {{ font-size: 14px; font-weight: 700; color: #ffffff !important; margin: 0; }}
+.sidebar-profile-sub {{ font-size: 11px; color: rgba(255,255,255,0.85) !important; margin: 3px 0 0; }}
+.sidebar-profile * {{ color: #ffffff !important; }}
 .sidebar-logo-wrap {{
     width: 56px; height: 56px; border-radius: 14px;
     border: 2px solid rgba(255,255,255,.3); background: rgba(255,255,255,.08);
@@ -261,15 +270,13 @@ section[data-testid="stSidebar"]>div {{ padding: 1.4rem 1.1rem !important; }}
     display: flex; align-items: center; justify-content: center;
 }}
 
-/* ── SIDEBAR SECTION LABEL — tanpa garis, tanpa ::before ── */
+/* ── SIDEBAR SECTION LABEL ── */
 .sidebar-section-label {{
     font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; color: {C['text_faint']} !important;
+    text-transform: uppercase; color: {C['text_muted']} !important;
     margin: 14px 0 8px; padding-left: 2px;
     display: block;
 }}
-
-/* Paksa warna teks sidebar section label agar terlihat di light mode */
 section[data-testid="stSidebar"] .sidebar-section-label {{
     color: {C['text_muted']} !important;
 }}
@@ -314,7 +321,7 @@ section[data-testid="stSidebar"] .sidebar-section-label {{
 }}
 .notif-pip {{ width: 6px; height: 6px; border-radius: 50%; background: {C['primary']}; flex-shrink: 0; margin-top: 3px; }}
 
-/* ── HEADER BANNER ── */
+/* ── HEADER BANNER — teks selalu putih karena background gelap ── */
 .header-banner {{
     background: linear-gradient(135deg,#0f2d6e 0%,#1a56db 45%,#0ea5e9 100%);
     border-radius: 18px; padding: 22px 30px; margin-bottom: 20px;
@@ -328,7 +335,7 @@ section[data-testid="stSidebar"] .sidebar-section-label {{
 }}
 .header-banner * {{ color: white !important; }}
 .header-title {{ font-size: 22px; font-weight: 800; color: white !important; margin: 0; letter-spacing: -.5px; }}
-.header-sub {{ color: rgba(255,255,255,.75) !important; font-size: 12.5px; margin: 3px 0 0; }}
+.header-sub {{ color: rgba(255,255,255,0.85) !important; font-size: 12.5px; margin: 3px 0 0; }}
 
 /* ── LANDING ── */
 .landing-hero {{
@@ -366,58 +373,43 @@ st.markdown(f"<style>{DARK_VARS}{COMMON_CSS}</style>", unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────
-# HELPER: render catalog card
+# HELPER: render catalog card sebagai st.markdown (tanpa iframe)
 # ─────────────────────────────────────────────
 def render_catalog_card(key, data, in_krs):
     nama = key.replace("_", " ").title()
     krs_badge = ""
     if in_krs:
-        krs_badge = f'<span style="background:{C["success_bg"]};color:{C["success"]};border-radius:6px;padding:2px 10px;font-size:11px;font-weight:700;">✅ Di KRS</span>'
+        krs_badge = (
+            f'<span style="background:{C["success_bg"]};color:{C["success"]};'
+            f'border-radius:6px;padding:2px 10px;font-size:11px;font-weight:700;'
+            f'white-space:nowrap;">✅ Di KRS</span>'
+        )
     kat_color = C["warning"] if data["kategori"] == "Wajib" else C["success"]
     kat_bg    = C["warning_bg"] if data["kategori"] == "Wajib" else C["success_bg"]
-    html = f"""<!DOCTYPE html><html><head>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-* {{ box-sizing: border-box; margin: 0; padding: 0; }}
-body {{ background: transparent; font-family: 'Sora', sans-serif; margin: 0; padding: 4px 8px 0; }}
-.card {{
-    background: {C['surface']};
-    border-radius: 14px;
-    padding: 16px 18px;
-    border: 1px solid {C['border']};
-    box-shadow: 0 2px 12px rgba(0,0,0,.12);
-}}
-.row {{ display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }}
-.emoji {{ font-size: 26px; line-height: 1.1; flex-shrink: 0; }}
-.title {{ font-size: 14px; font-weight: 700; color: {C['text']}; }}
-.sub {{ font-size: 11px; color: {C['text_muted']}; margin-top: 2px; }}
-.desc {{ font-size: 12.5px; color: {C['text_muted']}; margin-bottom: 10px; line-height: 1.6; }}
-.tags {{ display: flex; flex-wrap: wrap; gap: 5px; }}
-.tag {{
-    border-radius: 6px; padding: 3px 9px; font-size: 11.5px; font-weight: 600;
-    border: 1px solid transparent;
-}}
-</style></head><body>
-<div class="card">
-    <div class="row">
-        <div class="emoji">{data['emoji']}</div>
-        <div style="flex:1;">
-            <div class="title">{nama}</div>
-            <div class="sub">Semester {data['semester']}</div>
-        </div>
-        {krs_badge}
+    tag_style = (
+        f'display:inline-block;border-radius:6px;padding:3px 8px;font-size:11px;'
+        f'font-weight:600;margin:2px 2px 0 0;background:{C["surface2"]};color:{C["text_muted"]};'
+    )
+    return f"""
+<div style="background:{C['surface']};border-radius:14px;padding:14px 16px;
+     border:1px solid {C['border']};box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:6px;">
+  <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:8px;">
+    <span style="font-size:26px;line-height:1.1;flex-shrink:0;">{data['emoji']}</span>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:14px;font-weight:700;color:{C['text']};">{nama}</div>
+      <div style="font-size:11px;color:{C['text_muted']};margin-top:2px;">Semester {data['semester']} · {data['kode']}</div>
     </div>
-    <div class="desc">{data['desc']}</div>
-    <div class="tags">
-        <span class="tag" style="background:{C['primary_bg']};color:{C['primary']};">{data['sks']} SKS</span>
-        <span class="tag" style="background:{kat_bg};color:{kat_color};">{data['kategori']}</span>
-        <span class="tag" style="background:{C['surface2']};color:{C['text_muted']};border-color:{C['border']};">🕐 {data['jadwal']}</span>
-        <span class="tag" style="background:{C['surface2']};color:{C['text_muted']};border-color:{C['border']};">📍 {data['ruang']}</span>
-        <span class="tag" style="background:{C['surface2']};color:{C['text_muted']};border-color:{C['border']};">👨‍🏫 {data['dosen']}</span>
-    </div>
-</div>
-</body></html>"""
-    return html
+    {krs_badge}
+  </div>
+  <div style="font-size:12px;color:{C['text_muted']};margin-bottom:8px;line-height:1.55;">{data['desc']}</div>
+  <div>
+    <span style="{tag_style}background:{C['primary_bg']};color:{C['primary']};">{data['sks']} SKS</span>
+    <span style="{tag_style}background:{kat_bg};color:{kat_color};">{data['kategori']}</span>
+    <span style="{tag_style}">🕐 {data['jadwal']}</span>
+    <span style="{tag_style}">📍 {data['ruang']}</span>
+    <span style="{tag_style}">👨‍🏫 {data['dosen']}</span>
+  </div>
+</div>"""
 
 
 # ─────────────────────────────────────────────
@@ -437,7 +429,6 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    # ── Tema — label tanpa garis ──
     st.markdown(f'<div class="sidebar-section-label">🎨 Tema Tampilan</div>', unsafe_allow_html=True)
     col_t1, col_t2 = st.columns(2)
     with col_t1:
@@ -568,8 +559,9 @@ if st.session_state.show_landing:
     </div>
     """, unsafe_allow_html=True)
 
+    total_matkul = len(bot.nlp.course_data)
     s1, s2, s3, s4 = st.columns(4)
-    for col, (val, lbl) in zip([s1, s2, s3, s4], [("11","Mata Kuliah"),("24","Maks SKS"),("4","State FSM"),("9","Fitur Utama")]):
+    for col, (val, lbl) in zip([s1, s2, s3, s4], [(str(total_matkul),"Mata Kuliah"),("24","Maks SKS"),("4","State FSM"),("9","Fitur Utama")]):
         with col:
             st.markdown(f'<div class="dark-stat-card"><div class="dark-stat-val">{val}</div><div class="dark-stat-lbl">{lbl}</div></div>', unsafe_allow_html=True)
 
@@ -639,7 +631,7 @@ else:
         else '<div style="font-size:46px;">🎓</div>'
     )
 
-    # Header TANPA badge status di pojok kanan
+    # Header — teks putih karena gradient selalu gelap
     st.markdown(f"""
     <div class="header-banner">
         {logo_img}
@@ -650,7 +642,6 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-    # Tab TANPA "Tanya SIKA"
     tab_chat, tab_catalog, tab_schedule, tab_tips, tab_about = st.tabs([
         "💬 Chatbot KRS", "📚 Katalog Matkul", "📅 Jadwal Saya", "💡 Tips & Fakta", "ℹ️ Panduan",
     ])
@@ -691,7 +682,7 @@ else:
 
     # ═══════════════════════════════
     # TAB 2 — KATALOG
-    # Tombol langsung menempel di bawah card, tanpa gap
+    # Tombol mepet langsung di bawah card
     # ═══════════════════════════════
     with tab_catalog:
         st.markdown(f'<h3 style="color:{C["text"]};">📚 Katalog Mata Kuliah</h3>', unsafe_allow_html=True)
@@ -700,7 +691,7 @@ else:
 
         fc1, fc2, fc3 = st.columns([1, 1, 2])
         with fc1: filter_kat = st.selectbox("Kategori", ["Semua", "Wajib", "Pilihan"])
-        with fc2: filter_sem = st.selectbox("Semester", ["Semua", "2", "4"])
+        with fc2: filter_sem = st.selectbox("Semester", ["Semua", "2", "4", "6", "8"])
         with fc3: search_q   = st.text_input("🔍 Cari matkul atau dosen...", placeholder="contoh: web, Ramadhan, IoT")
 
         st.markdown("---")
@@ -726,31 +717,28 @@ else:
                     nama   = key.replace("_", " ").title()
                     in_krs = any(c["course_key"] == key for c in bot.cart)
                     with cols[col_idx]:
-                        # Card + tombol dalam satu container agar menempel
-                        card_html = render_catalog_card(key, data, in_krs)
-                        components.html(card_html, height=195, scrolling=False)
-                        # Tarik tombol ke atas agar menempel ke card
-                        st.markdown('<div style="margin-top:-16px;"></div>', unsafe_allow_html=True)
-                        if in_krs:
-                            if st.button(
-                                f"🗑️ Hapus dari KRS",
-                                key=f"rem_{key}",
-                                use_container_width=True,
-                            ):
-                                msg = bot.remove_course(key)
-                                st.session_state.history.append({"role": "assistant", "content": msg})
-                                st.rerun()
-                        else:
-                            if st.button(
-                                f"➕ Tambah ke KRS",
-                                key=f"add_{key}",
-                                use_container_width=True,
-                                type="primary",
-                            ):
-                                success, msg = bot.add_course(key)
-                                st.session_state.history.append({"role": "user", "content": f"ambil {nama}"})
-                                st.session_state.history.append({"role": "assistant", "content": msg})
-                                st.rerun()
+                        with st.container():
+                            st.markdown(render_catalog_card(key, data, in_krs), unsafe_allow_html=True)
+                            if in_krs:
+                                if st.button(
+                                    f"🗑️ Hapus dari KRS",
+                                    key=f"rem_{key}",
+                                    use_container_width=True,
+                                ):
+                                    msg = bot.remove_course(key)
+                                    st.session_state.history.append({"role": "assistant", "content": msg})
+                                    st.rerun()
+                            else:
+                                if st.button(
+                                    f"➕ Tambah ke KRS",
+                                    key=f"add_{key}",
+                                    use_container_width=True,
+                                    type="primary",
+                                ):
+                                    success, msg = bot.add_course(key)
+                                    st.session_state.history.append({"role": "user", "content": f"ambil {nama}"})
+                                    st.session_state.history.append({"role": "assistant", "content": msg})
+                                    st.rerun()
                 st.markdown("---")
 
     # ═══════════════════════════════

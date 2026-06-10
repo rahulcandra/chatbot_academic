@@ -289,8 +289,6 @@ section[data-testid="stSidebar"]>div {{ padding:1.4rem 1.1rem !important; }}
 
 /* ════════════════════════════════════════════════
    GRADIENT SECTIONS — always white text
-   (must come AFTER the global color rules above
-   so specificity wins in both dark & light mode)
    ════════════════════════════════════════════════ */
 
 /* ── Sidebar Profile ── */
@@ -423,10 +421,6 @@ section[data-testid="stSidebar"]>div {{ padding:1.4rem 1.1rem !important; }}
 .krs-name {{
     font-size:12.5px; font-weight:700; color:{C['text']};
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}}
-.krs-code {{
-    font-size:10.5px; color:{C['text_muted']};
-    font-family:'JetBrains Mono',monospace; margin-top:1px;
 }}
 .krs-sks-badge {{
     background:{C['primary_bg']}; color:{C['primary']};
@@ -570,7 +564,7 @@ def render_catalog_card(key, data, in_krs):
     <span style="font-size:26px;line-height:1.1;flex-shrink:0;">{data['emoji']}</span>
     <div style="flex:1;min-width:0;">
       <div style="font-size:14px;font-weight:700;color:{C['text']};">{nama}</div>
-      <div style="font-size:11px;color:{C['text_muted']};margin-top:2px;">Semester {data['semester']} · {data['kode']}</div>
+      <div style="font-size:11px;color:{C['text_muted']};margin-top:2px;">Semester {data['semester']}</div>
     </div>
     {krs_badge}
   </div>
@@ -694,7 +688,6 @@ with st.sidebar:
                     <div class="krs-emoji-box">{c['emoji']}</div>
                     <div class="krs-text">
                         <div class="krs-name">{nama}</div>
-                        <div class="krs-code">{c['kode']}</div>
                     </div>
                     <span class="krs-sks-badge">{c['sks']} SKS</span>
                 </div>""", unsafe_allow_html=True)
@@ -885,7 +878,7 @@ else:
         fc1, fc2, fc3 = st.columns([1,1,2])
         with fc1: filter_kat = st.selectbox("Kategori", ["Semua","Wajib","Pilihan"])
         with fc2: filter_sem = st.selectbox("Semester", ["Semua","1","2","3","4","5","6","7","8"])
-        with fc3: search_q  = st.text_input("🔍 Cari matkul atau dosen...", placeholder="contoh: web, Ramadhan, IoT")
+        with fc3: search_q  = st.text_input("Cari Mata Kuliah atau Dosen", placeholder="Cari...")
 
         st.markdown("---")
         filtered = []
@@ -895,7 +888,7 @@ else:
             if filter_sem != "Semua" and str(data["semester"]) != filter_sem: continue
             if search_q:
                 sq = search_q.lower()
-                if not any(sq in x for x in [key, data["kode"].lower(), data["dosen"].lower(), nama.lower()]):
+                if not any(sq in x for x in [key, data["dosen"].lower(), nama.lower()]):
                     continue
             filtered.append((key, data))
 
@@ -929,7 +922,7 @@ else:
         st.markdown("---")
 
         if not bot.cart:
-            st.info("Belum ada mata kuliah dalam KRS.\nTambahkan dari **Katalog** atau via **Chat**.", icon="📭")
+            st.info("Belum ada mata kuliah dalam KRS.\nTambahkan dari **Katalog** atau via **Chat**.")
         else:
             days_order = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"]
             by_day = {d:[] for d in days_order}
@@ -1035,7 +1028,7 @@ else:
                     with col_info:
                         krs_tag = "  ✅ *Di KRS*" if in_krs else ""
                         st.markdown(f"**{nama}**{krs_tag}")
-                        st.caption(f"{v['kode']} · Semester {v['semester']} · {v['sks']} SKS · 👨‍🏫 {v['dosen']} · 🕐 {v['jadwal']}")
+                        st.caption(f"Semester {v['semester']} · {v['sks']} SKS · 👨‍🏫 {v['dosen']} · 🕐 {v['jadwal']}")
 
                     badge_col1, badge_col2, badge_col3 = st.columns([1,1,3])
                     with badge_col1:

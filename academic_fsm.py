@@ -25,7 +25,7 @@ class NLPEngine:
     course_data = {
         # ── SEMESTER 1 ──
         "pendidikan_agama": {
-            "kode": "MPK-101", "sks": 2, "semester": 1,
+            "sks": 2, "semester": 1,
             "emoji": "🕌", "kategori": "Wajib",
             "desc": "Nilai-nilai keagamaan, akhlak mulia, dan pembentukan karakter mahasiswa.",
             "jadwal": "Senin 07:30", "ruang": "GP 601",
@@ -34,7 +34,7 @@ class NLPEngine:
             "tips": "Aktif dalam diskusi kelas dan kaitkan nilai agama dengan etika profesi IT."
         },
         "pendidikan_kewarganegaraan": {
-            "kode": "MPK-102", "sks": 2, "semester": 1,
+            "sks": 2, "semester": 1,
             "emoji": "🇮🇩", "kategori": "Wajib",
             "desc": "Wawasan kebangsaan, demokrasi, hak asasi manusia, dan bela negara.",
             "jadwal": "Selasa 07:30", "ruang": "GP 601",
@@ -43,7 +43,7 @@ class NLPEngine:
             "tips": "Kaitkan wawasan kebangsaan dengan isu digital dan keamanan siber nasional."
         },
         "matematika_dasar": {
-            "kode": "MAT-101", "sks": 3, "semester": 1,
+            "sks": 3, "semester": 1,
             "emoji": "➕", "kategori": "Wajib",
             "desc": "Aljabar, fungsi, trigonometri, dan dasar-dasar matematika untuk teknik.",
             "jadwal": "Rabu 07:30", "ruang": "GP 607",
@@ -52,7 +52,7 @@ class NLPEngine:
             "tips": "Latihan soal setiap hari. Manfaatkan Khan Academy untuk materi yang belum paham."
         },
         "algoritma_pemrograman": {
-            "kode": "TI-101", "sks": 3, "semester": 1,
+            "sks": 3, "semester": 1,
             "emoji": "🔄", "kategori": "Wajib",
             "desc": "Logika algoritma, flowchart, pseudocode, dan pengantar pemrograman terstruktur.",
             "jadwal": "Kamis 07:30", "ruang": "GU 401",
@@ -61,7 +61,7 @@ class NLPEngine:
             "tips": "Latih flowchart manual dulu sebelum coding. Gunakan draw.io untuk visualisasi algoritma."
         },
         "pengantar_teknologi_informasi": {
-            "kode": "TI-102", "sks": 2, "semester": 1,
+            "sks": 2, "semester": 1,
             "emoji": "💡", "kategori": "Wajib",
             "desc": "Pengenalan hardware, software, jaringan, dan perkembangan teknologi informasi.",
             "jadwal": "Jumat 07:30", "ruang": "GP 608",
@@ -70,7 +70,7 @@ class NLPEngine:
             "tips": "Baca berita teknologi terkini di TechCrunch atau IDN Times Tech untuk konteks nyata."
         },
         "fisika_dasar": {
-            "kode": "FIS-101", "sks": 2, "semester": 1,
+            "sks": 2, "semester": 1,
             "emoji": "⚛️", "kategori": "Wajib",
             "desc": "Mekanika, listrik, magnet, dan gelombang untuk dasar ilmu teknik.",
             "jadwal": "Senin 10:00", "ruang": "GP 607",
@@ -81,7 +81,7 @@ class NLPEngine:
 
         # ── SEMESTER 2 ──
         "kalkulus_integral": {
-            "kode": "TI-201", "sks": 2, "semester": 2,
+            "sks": 2, "semester": 2,
             "emoji": "📐", "kategori": "Wajib",
             "desc": "Diferensial, integral, dan limit fungsi untuk mahasiswa teknik informatika.",
             "jadwal": "Jumat 18:30", "ruang": "GP 607",
@@ -90,7 +90,7 @@ class NLPEngine:
             "tips": "Latihan soal minimal 10 soal per hari. Gunakan Wolfram Alpha untuk cek jawaban."
         },
         "sistem_operasi": {
-            "kode": "TI-202", "sks": 2, "semester": 2,
+            "sks": 2, "semester": 2,
             "emoji": "🖥️", "kategori": "Wajib",
             "desc": "Konsep OS, manajemen proses, memori, dan sistem file.",
             "jadwal": "Rabu 20:10", "ruang": "GU 301",
@@ -99,7 +99,7 @@ class NLPEngine:
             "tips": "Praktikkan di Linux/VirtualBox. Baca 'Operating System Concepts' oleh Silberschatz."
         },
         "struktur_data": {
-            "kode": "TI-203", "sks": 3, "semester": 2,
+            "sks": 3, "semester": 2,
             "emoji": "🗂️", "kategori": "Wajib",
             "desc": "Array, linked list, stack, queue, tree, graph, dan algoritma sorting/searching.",
             "jadwal": "Selasa 18:30", "ruang": "GU 301",
@@ -108,7 +108,7 @@ class NLPEngine:
             "tips": "Visualisasikan struktur data dengan VisuAlgo. Implementasikan sendiri dari nol."
         },
         "pemrograman_komputer": {
-            "kode": "TI-204", "sks": 3, "semester": 2,
+            "sks": 3, "semester": 2,
             "emoji": "💻", "kategori": "Wajib",
             "desc": "Dasar pemrograman prosedural, OOP, dan pemecahan masalah komputasi.",
             "jadwal": "Kamis 19:20", "ruang": "GU 401",
@@ -117,7 +117,7 @@ class NLPEngine:
             "tips": "Kerjakan minimal 1 program latihan per hari. Manfaatkan LeetCode untuk latihan."
         },
         "berbicara": {
-            "kode": "BHS-201", "sks": 2, "semester": 2,
+            "sks": 2, "semester": 2,
             "emoji": "🗣️", "kategori": "Wajib",
             "desc": "Keterampilan berbicara efektif dalam konteks akademik dan profesional.",
             "jadwal": "Senin 09:10", "ruang": "A.307",
@@ -126,7 +126,7 @@ class NLPEngine:
             "tips": "Latih public speaking di depan cermin. Rekam diri sendiri untuk evaluasi."
         },
         "ke_pgri_an": {
-            "kode": "UPGRIS-201", "sks": 2, "semester": 2,
+            "sks": 2, "semester": 2,
             "emoji": "🏫", "kategori": "Wajib",
             "desc": "Wawasan sejarah, visi, misi, dan nilai-nilai Universitas PGRI Semarang.",
             "jadwal": "Jumat 20:10", "ruang": "GD 412",
@@ -135,7 +135,7 @@ class NLPEngine:
             "tips": "Pahami sejarah PGRI dan UPGRIS. Ikuti kegiatan kemahasiswaan untuk nilai plus."
         },
         "bahasa_indonesia": {
-            "kode": "MPK-201", "sks": 2, "semester": 2,
+            "sks": 2, "semester": 2,
             "emoji": "🇮🇩", "kategori": "Wajib",
             "desc": "Kaidah bahasa Indonesia baku untuk keperluan akademik dan penulisan ilmiah.",
             "jadwal": "Kamis 07:30", "ruang": "GP 601",
@@ -144,7 +144,7 @@ class NLPEngine:
             "tips": "Baca KBBI dan EYD. Latih menulis esai ilmiah minimal 1 per minggu."
         },
         "bahasa_inggris": {
-            "kode": "MPK-202", "sks": 2, "semester": 2,
+            "sks": 2, "semester": 2,
             "emoji": "🇬🇧", "kategori": "Wajib",
             "desc": "Bahasa Inggris untuk komunikasi teknik dan membaca literatur ilmiah.",
             "jadwal": "Kamis 16:20", "ruang": "B 504",
@@ -155,7 +155,7 @@ class NLPEngine:
 
         # ── SEMESTER 3 ──
         "jaringan_komputer": {
-            "kode": "TI-301", "sks": 3, "semester": 3,
+            "sks": 3, "semester": 3,
             "emoji": "🌐", "kategori": "Wajib",
             "desc": "Arsitektur jaringan, protokol TCP/IP, routing, switching, dan keamanan jaringan dasar.",
             "jadwal": "Senin 10:00", "ruang": "GP 609",
@@ -164,7 +164,7 @@ class NLPEngine:
             "tips": "Praktikkan dengan Cisco Packet Tracer (gratis). Sertifikasi CCNA sangat berharga di industri."
         },
         "basis_data": {
-            "kode": "TI-302", "sks": 3, "semester": 3,
+            "sks": 3, "semester": 3,
             "emoji": "🗄️", "kategori": "Wajib",
             "desc": "Perancangan database, SQL, normalisasi, dan sistem manajemen basis data.",
             "jadwal": "Rabu 08:20", "ruang": "GU 301",
@@ -173,7 +173,7 @@ class NLPEngine:
             "tips": "Kuasai SQL dengan SQLZoo atau Mode Analytics. Praktikkan normalisasi pada studi kasus nyata."
         },
         "pemrograman_berorientasi_objek": {
-            "kode": "TI-303", "sks": 3, "semester": 3,
+            "sks": 3, "semester": 3,
             "emoji": "🧩", "kategori": "Wajib",
             "desc": "Konsep OOP: class, inheritance, polymorphism, encapsulation, dan design patterns.",
             "jadwal": "Selasa 10:00", "ruang": "GU 401",
@@ -182,7 +182,7 @@ class NLPEngine:
             "tips": "Buat minimal 3 proyek OOP. Pelajari design patterns dari refactoring.guru."
         },
         "logika_informatika": {
-            "kode": "TI-304", "sks": 2, "semester": 3,
+            "sks": 2, "semester": 3,
             "emoji": "🧮", "kategori": "Wajib",
             "desc": "Logika proposisi, predikat, inferensi, dan aplikasi logika dalam pemrograman.",
             "jadwal": "Kamis 08:20", "ruang": "GP 607",
@@ -191,7 +191,7 @@ class NLPEngine:
             "tips": "Latihan soal pembuktian logika setiap hari. Gunakan tabel kebenaran untuk visualisasi."
         },
         "rekayasa_perangkat_lunak": {
-            "kode": "TI-305", "sks": 3, "semester": 3,
+            "sks": 3, "semester": 3,
             "emoji": "⚙️", "kategori": "Wajib",
             "desc": "SDLC, metodologi Agile/Scrum, dokumentasi perangkat lunak, dan quality assurance.",
             "jadwal": "Jumat 10:00", "ruang": "GP 608",
@@ -200,7 +200,7 @@ class NLPEngine:
             "tips": "Pelajari Git flow dan manajemen proyek Agile. Buat proyek tim dengan GitHub Projects."
         },
         "statistika": {
-            "kode": "MAT-301", "sks": 2, "semester": 3,
+            "sks": 2, "semester": 3,
             "emoji": "📊", "kategori": "Wajib",
             "desc": "Statistika deskriptif, probabilitas, distribusi, uji hipotesis, dan regresi.",
             "jadwal": "Senin 13:00", "ruang": "GP 607",
@@ -211,7 +211,7 @@ class NLPEngine:
 
         # ── SEMESTER 4 ──
         "matematika_diskrit": {
-            "kode": "TI-401", "sks": 3, "semester": 4,
+            "sks": 3, "semester": 4,
             "emoji": "🔢", "kategori": "Wajib",
             "desc": "Logika, himpunan, relasi, fungsi, kombinatorik, graf, dan teori bilangan.",
             "jadwal": "Rabu 10:00", "ruang": "GP 607",
@@ -220,7 +220,7 @@ class NLPEngine:
             "tips": "Buat mind map untuk setiap topik. Latihan soal logika dan graf setiap hari."
         },
         "analisis_dan_perancangan_sistem": {
-            "kode": "TI-402", "sks": 3, "semester": 4,
+            "sks": 3, "semester": 4,
             "emoji": "📋", "kategori": "Wajib",
             "desc": "Metodologi pengembangan sistem, DFD, ERD, dan dokumentasi analisis kebutuhan.",
             "jadwal": "Selasa 07:30", "ruang": "GP 401",
@@ -229,7 +229,7 @@ class NLPEngine:
             "tips": "Pelajari tools seperti draw.io dan Lucidchart. Buat studi kasus nyata."
         },
         "pemrograman_web": {
-            "kode": "TI-403", "sks": 3, "semester": 4,
+            "sks": 3, "semester": 4,
             "emoji": "🌐", "kategori": "Wajib",
             "desc": "HTML, CSS, JavaScript, PHP, dan framework web modern untuk pengembangan aplikasi.",
             "jadwal": "Kamis 10:00", "ruang": "GU 401",
@@ -238,7 +238,7 @@ class NLPEngine:
             "tips": "Buat portofolio web pribadi. Ikuti tutorial di freeCodeCamp dan MDN Web Docs."
         },
         "metode_numerik": {
-            "kode": "TI-404", "sks": 2, "semester": 4,
+            "sks": 2, "semester": 4,
             "emoji": "🔬", "kategori": "Wajib",
             "desc": "Algoritma numerik untuk penyelesaian persamaan, interpolasi, dan integrasi numerik.",
             "jadwal": "Rabu 13:00", "ruang": "GP 607",
@@ -247,7 +247,7 @@ class NLPEngine:
             "tips": "Implementasikan algoritma dalam Python/MATLAB. Gunakan NumPy untuk verifikasi."
         },
         "decission_support_system": {
-            "kode": "TI-405", "sks": 3, "semester": 4,
+            "sks": 3, "semester": 4,
             "emoji": "🎯", "kategori": "Wajib",
             "desc": "Sistem pendukung keputusan, metode TOPSIS, AHP, SAW, dan fuzzy logic.",
             "jadwal": "Senin 13:00", "ruang": "GP 608",
@@ -256,7 +256,7 @@ class NLPEngine:
             "tips": "Implementasikan metode DSS dalam studi kasus nyata. Buat perbandingan antar metode."
         },
         "teknologi_animasi": {
-            "kode": "TI-406", "sks": 3, "semester": 4,
+            "sks": 3, "semester": 4,
             "emoji": "🎬", "kategori": "Wajib",
             "desc": "Prinsip animasi, 2D/3D animation, motion graphics, dan tools animasi digital.",
             "jadwal": "Jumat 13:00", "ruang": "GU 401",
@@ -265,7 +265,7 @@ class NLPEngine:
             "tips": "Kuasai Adobe Animate atau Blender. Buat portofolio animasi pendek sebagai latihan."
         },
         "internet_of_things": {
-            "kode": "TI-407", "sks": 3, "semester": 4,
+            "sks": 3, "semester": 4,
             "emoji": "📡", "kategori": "Wajib",
             "desc": "Arsitektur IoT, sensor, aktuator, protokol komunikasi, dan platform IoT.",
             "jadwal": "Senin 08:20", "ruang": "GP 609",
@@ -274,7 +274,7 @@ class NLPEngine:
             "tips": "Praktikkan dengan Arduino/Raspberry Pi. Ikuti komunitas IoT Indonesia di Telegram."
         },
         "digital_marketing": {
-            "kode": "MAN-401", "sks": 2, "semester": 4,
+            "sks": 2, "semester": 4,
             "emoji": "📢", "kategori": "Pilihan",
             "desc": "Strategi pemasaran digital, SEO, SEM, media sosial, dan analitik web.",
             "jadwal": "Kamis 09:10", "ruang": "A.303",
@@ -283,7 +283,7 @@ class NLPEngine:
             "tips": "Buat akun Google Analytics dan Google Search Console. Praktikkan kampanye kecil."
         },
         "studi_kelayakan_bisnis": {
-            "kode": "MAN-402", "sks": 2, "semester": 4,
+            "sks": 2, "semester": 4,
             "emoji": "📋", "kategori": "Pilihan",
             "desc": "Analisis kelayakan bisnis dari aspek teknis, finansial, pasar, dan organisasi.",
             "jadwal": "Rabu 13:00", "ruang": "A.LAB EKONOMI",
@@ -292,7 +292,7 @@ class NLPEngine:
             "tips": "Pelajari template business plan. Analisis kasus startup lokal sebagai latihan."
         },
         "manajemen_sdm": {
-            "kode": "MAN-403", "sks": 2, "semester": 4,
+            "sks": 2, "semester": 4,
             "emoji": "👥", "kategori": "Pilihan",
             "desc": "Perencanaan SDM, rekrutmen, pengembangan, kompensasi, dan hubungan industrial.",
             "jadwal": "Selasa 14:40", "ruang": "A.303",
@@ -303,7 +303,7 @@ class NLPEngine:
 
         # ── SEMESTER 5 ──
         "kecerdasan_buatan": {
-            "kode": "TI-501", "sks": 3, "semester": 5,
+            "sks": 3, "semester": 5,
             "emoji": "🤖", "kategori": "Wajib",
             "desc": "Konsep AI, searching, knowledge representation, machine learning dasar, dan neural network.",
             "jadwal": "Senin 10:00", "ruang": "GU 401",
@@ -312,7 +312,7 @@ class NLPEngine:
             "tips": "Kuasai Python untuk AI. Ikuti kursus Andrew Ng di Coursera sebagai tambahan."
         },
         "pemrograman_mobile": {
-            "kode": "TI-502", "sks": 3, "semester": 5,
+            "sks": 3, "semester": 5,
             "emoji": "📱", "kategori": "Wajib",
             "desc": "Pengembangan aplikasi mobile Android/iOS menggunakan framework modern.",
             "jadwal": "Selasa 13:00", "ruang": "GU 401",
@@ -321,7 +321,7 @@ class NLPEngine:
             "tips": "Buat minimal 2 aplikasi mobile untuk portofolio. Publish ke Google Play Store."
         },
         "keamanan_sistem_informasi": {
-            "kode": "TI-503", "sks": 3, "semester": 5,
+            "sks": 3, "semester": 5,
             "emoji": "🔐", "kategori": "Wajib",
             "desc": "Kriptografi, keamanan jaringan, ethical hacking, dan manajemen risiko keamanan informasi.",
             "jadwal": "Rabu 10:00", "ruang": "GP 608",
@@ -330,7 +330,7 @@ class NLPEngine:
             "tips": "Ikuti CTF (Capture The Flag) online. Platform TryHackMe dan HackTheBox sangat direkomendasikan."
         },
         "manajemen_proyek_ti": {
-            "kode": "TI-504", "sks": 2, "semester": 5,
+            "sks": 2, "semester": 5,
             "emoji": "📊", "kategori": "Wajib",
             "desc": "Perencanaan proyek, manajemen risiko, Agile, Scrum, dan tools manajemen proyek.",
             "jadwal": "Kamis 13:00", "ruang": "GP 608",
@@ -339,7 +339,7 @@ class NLPEngine:
             "tips": "Pelajari Jira, Trello, dan MS Project. Sertifikasi PMP/Scrum Master sangat dihargai industri."
         },
         "sistem_informasi_manajemen": {
-            "kode": "TI-505", "sks": 3, "semester": 5,
+            "sks": 3, "semester": 5,
             "emoji": "🏢", "kategori": "Wajib",
             "desc": "Sistem informasi untuk pengambilan keputusan manajemen, ERP, CRM, dan SCM.",
             "jadwal": "Jumat 10:00", "ruang": "GP 609",
@@ -348,7 +348,7 @@ class NLPEngine:
             "tips": "Pelajari SAP Business One atau Odoo untuk simulasi ERP. Sangat relevan di dunia kerja."
         },
         "pengolahan_citra": {
-            "kode": "TI-506", "sks": 3, "semester": 5,
+            "sks": 3, "semester": 5,
             "emoji": "🖼️", "kategori": "Pilihan",
             "desc": "Teknik pengolahan citra digital, segmentasi, deteksi tepi, dan klasifikasi gambar.",
             "jadwal": "Senin 13:00", "ruang": "GU 301",
@@ -359,7 +359,7 @@ class NLPEngine:
 
         # ── SEMESTER 6 ──
         "metodologi_penelitian": {
-            "kode": "TI-601", "sks": 2, "semester": 6,
+            "sks": 2, "semester": 6,
             "emoji": "🔍", "kategori": "Wajib",
             "desc": "Metode penelitian ilmiah, penulisan proposal, tinjauan pustaka, dan analisis data.",
             "jadwal": "Rabu 10:50", "ruang": "GP 608",
@@ -368,7 +368,7 @@ class NLPEngine:
             "tips": "Gunakan Mendeley untuk manajemen referensi. Baca minimal 5 jurnal internasional per minggu."
         },
         "e_business": {
-            "kode": "TI-602", "sks": 3, "semester": 6,
+            "sks": 3, "semester": 6,
             "emoji": "🛒", "kategori": "Wajib",
             "desc": "Model bisnis digital, e-commerce, payment gateway, keamanan transaksi online.",
             "jadwal": "Senin 10:00", "ruang": "GU 401",
@@ -377,7 +377,7 @@ class NLPEngine:
             "tips": "Pelajari Shopify, WooCommerce, dan Midtrans. Analisis model bisnis marketplace Indonesia."
         },
         "data_science": {
-            "kode": "TI-603", "sks": 3, "semester": 6,
+            "sks": 3, "semester": 6,
             "emoji": "📈", "kategori": "Wajib",
             "desc": "Analisis data, machine learning dasar, visualisasi data, dan Python untuk data science.",
             "jadwal": "Senin 13:00", "ruang": "GU 401",
@@ -386,7 +386,7 @@ class NLPEngine:
             "tips": "Kuasai Python (Pandas, NumPy, Scikit-learn). Ikuti Kaggle competition untuk pengalaman nyata."
         },
         "teori_bahasa_dan_otomata": {
-            "kode": "TI-604", "sks": 3, "semester": 6,
+            "sks": 3, "semester": 6,
             "emoji": "⚙️", "kategori": "Wajib",
             "desc": "Automata, grammar formal, regular expression, pushdown automata, dan mesin Turing.",
             "jadwal": "Jumat 09:10", "ruang": "GP 607",
@@ -395,7 +395,7 @@ class NLPEngine:
             "tips": "Visualisasikan automata dengan JFLAP. Buat implementasi regex engine sederhana."
         },
         "workshop_teknologi_informasi": {
-            "kode": "TI-605", "sks": 3, "semester": 6,
+            "sks": 3, "semester": 6,
             "emoji": "🛠️", "kategori": "Wajib",
             "desc": "Workshop praktis pengembangan proyek teknologi informasi secara tim.",
             "jadwal": "Jumat 17:10", "ruang": "GP 609",
@@ -404,7 +404,7 @@ class NLPEngine:
             "tips": "Gunakan Git/GitHub untuk kolaborasi tim. Dokumentasikan setiap sprint dengan baik."
         },
         "etika_profesi": {
-            "kode": "TI-606", "sks": 2, "semester": 6,
+            "sks": 2, "semester": 6,
             "emoji": "⚖️", "kategori": "Wajib",
             "desc": "Etika profesi IT, kode etik programmer, hak kekayaan intelektual, dan cyberlaw.",
             "jadwal": "Jumat 20:10", "ruang": "GP 608",
@@ -413,7 +413,7 @@ class NLPEngine:
             "tips": "Baca IEEE Code of Ethics dan UU ITE. Kaitkan dengan kasus nyata di dunia teknologi."
         },
         "pendidikan_pancasila": {
-            "kode": "MPK-601", "sks": 2, "semester": 6,
+            "sks": 2, "semester": 6,
             "emoji": "🦅", "kategori": "Wajib",
             "desc": "Nilai-nilai Pancasila, implementasi dalam kehidupan berbangsa dan bernegara.",
             "jadwal": "Rabu 10:50", "ruang": "GP 601",
@@ -424,7 +424,7 @@ class NLPEngine:
 
         # ── SEMESTER 7 ──
         "cloud_computing": {
-            "kode": "TI-701", "sks": 3, "semester": 7,
+            "sks": 3, "semester": 7,
             "emoji": "☁️", "kategori": "Pilihan",
             "desc": "Arsitektur cloud, layanan AWS/GCP/Azure, containerisasi Docker, dan Kubernetes.",
             "jadwal": "Senin 10:00", "ruang": "GP 609",
@@ -433,7 +433,7 @@ class NLPEngine:
             "tips": "Manfaatkan AWS Free Tier atau GCP Free Credits. Kejar sertifikasi AWS Cloud Practitioner."
         },
         "big_data": {
-            "kode": "TI-702", "sks": 3, "semester": 7,
+            "sks": 3, "semester": 7,
             "emoji": "🗄️", "kategori": "Pilihan",
             "desc": "Arsitektur big data, Hadoop, Spark, data pipeline, dan analitik skala besar.",
             "jadwal": "Rabu 13:00", "ruang": "GU 401",
@@ -442,7 +442,7 @@ class NLPEngine:
             "tips": "Pelajari Apache Spark dan Kafka. Ikuti program Bangkit Academy untuk hands-on experience."
         },
         "pengembangan_game": {
-            "kode": "TI-703", "sks": 3, "semester": 7,
+            "sks": 3, "semester": 7,
             "emoji": "🎮", "kategori": "Pilihan",
             "desc": "Game design, game mechanics, pengembangan menggunakan Unity/Unreal, dan monetisasi.",
             "jadwal": "Selasa 10:00", "ruang": "GU 401",
@@ -451,7 +451,7 @@ class NLPEngine:
             "tips": "Mulai dengan game sederhana di Unity (gratis). Publish ke itch.io untuk portofolio."
         },
         "kuliah_kerja_lapangan": {
-            "kode": "TI-704", "sks": 2, "semester": 7,
+            "sks": 2, "semester": 7,
             "emoji": "🏭", "kategori": "Wajib",
             "desc": "Praktik kerja lapangan di perusahaan atau instansi terkait bidang teknologi informasi.",
             "jadwal": "Jumat 20:10", "ruang": "Balairung",
@@ -460,7 +460,7 @@ class NLPEngine:
             "tips": "Cari tempat KKL yang sesuai minat karir. Manfaatkan untuk membangun koneksi profesional."
         },
         "kuliah_kerja_nyata": {
-            "kode": "TI-705", "sks": 4, "semester": 7,
+            "sks": 4, "semester": 7,
             "emoji": "🌍", "kategori": "Wajib",
             "desc": "Pengabdian masyarakat dengan menerapkan ilmu teknologi informasi di lingkungan nyata.",
             "jadwal": "Sabtu 07:30", "ruang": "A.201",
@@ -471,7 +471,7 @@ class NLPEngine:
 
         # ── SEMESTER 8 ──
         "sistem_multimedia_interaktif": {
-            "kode": "TI-801", "sks": 3, "semester": 8,
+            "sks": 3, "semester": 8,
             "emoji": "🎮", "kategori": "Pilihan",
             "desc": "Desain multimedia interaktif, game development dasar, AR/VR, dan UX/UI.",
             "jadwal": "Selasa 10:00", "ruang": "GU 401",
@@ -480,7 +480,7 @@ class NLPEngine:
             "tips": "Kuasai Unity atau Godot untuk game. Pelajari prinsip UX dari Google Material Design."
         },
         "workshop_ti_lanjut": {
-            "kode": "TI-802", "sks": 2, "semester": 8,
+            "sks": 2, "semester": 8,
             "emoji": "🛠️", "kategori": "Wajib",
             "desc": "Workshop lanjut pengembangan proyek TI, persiapan tugas akhir, dan presentasi karya.",
             "jadwal": "Sabtu 10:00", "ruang": "GU 401",
@@ -489,7 +489,7 @@ class NLPEngine:
             "tips": "Fokus pada proyek yang bisa dikembangkan menjadi skripsi. Mulai kumpulkan referensi jurnal."
         },
         "tugas_akhir": {
-            "kode": "TI-803", "sks": 6, "semester": 8,
+            "sks": 6, "semester": 8,
             "emoji": "🎓", "kategori": "Wajib",
             "desc": "Penelitian mandiri, pengembangan sistem/aplikasi, penulisan skripsi, dan sidang akhir.",
             "jadwal": "Sabtu 08:20", "ruang": "GP 401",
@@ -501,12 +501,12 @@ class NLPEngine:
 
     SYNONYMS = {
         # Semester 1
-        "pendidikan_agama":               ["agama", "pend agama", "pendidikan agama", "mpk101"],
+        "pendidikan_agama":               ["agama", "pend agama", "pendidikan agama"],
         "pendidikan_kewarganegaraan":      ["pkn", "kewarganegaraan", "civics", "pend kewarganegaraan"],
-        "matematika_dasar":               ["matdas", "matematika dasar", "mat dasar", "mat101"],
-        "algoritma_pemrograman":           ["algoritma", "algor", "algoprog", "ti101"],
-        "pengantar_teknologi_informasi":   ["pti", "pengantar ti", "pengantar teknologi", "ti102"],
-        "fisika_dasar":                    ["fisika", "fis dasar", "fisika dasar", "fis101"],
+        "matematika_dasar":               ["matdas", "matematika dasar", "mat dasar"],
+        "algoritma_pemrograman":           ["algoritma", "algor", "algoprog"],
+        "pengantar_teknologi_informasi":   ["pti", "pengantar ti", "pengantar teknologi"],
+        "fisika_dasar":                    ["fisika", "fis dasar", "fisika dasar"],
         # Semester 2
         "kalkulus_integral":              ["kalkulus", "kalkul", "integral", "matkal", "kal int"],
         "sistem_operasi":                 ["so", "sistem operasi", "os", "sismop", "sis op"],
@@ -641,7 +641,7 @@ class AcademicFSM:
         if self.total_sks() + data["sks"] > self.nlp.MAX_SKS:
             return False, f"📊 Tidak bisa tambah! Total SKS akan melebihi batas maksimum {self.nlp.MAX_SKS} SKS."
         self.cart.append({
-            "course_key": key, "kode": data["kode"], "sks": data["sks"],
+            "course_key": key, "sks": data["sks"],
             "jadwal": data["jadwal"], "ruang": data["ruang"],
             "dosen": data["dosen"], "emoji": data["emoji"],
         })
@@ -775,7 +775,7 @@ class AcademicFSM:
                 kat_tag = "Wajib" if v["kategori"] == "Wajib" else "Pilihan"
                 lines.append(
                     f"\n{in_krs} {v['emoji']} **{k.replace('_',' ').title()}**\n"
-                    f"   `{v['kode']}` · {v['sks']} SKS · {kat_tag}\n"
+                    f"   {v['sks']} SKS · {kat_tag}\n"
                     f"   🕐 {v['jadwal']} · 📍 {v['ruang']}"
                 )
         lines.append(f"\n\n📊 **Total SKS kamu: {self.total_sks()}/{self.nlp.MAX_SKS} SKS**")
@@ -789,7 +789,7 @@ class AcademicFSM:
         pre = ", ".join(p.replace("_"," ").title() for p in d["prereq"]) or "Tidak ada"
         stars = "⭐" * d["difficulty"] + "☆" * (5 - d["difficulty"])
         return (
-            f"{d['emoji']} **{key.replace('_',' ').title()}** ({d['kode']})\n\n"
+            f"{d['emoji']} **{key.replace('_',' ').title()}**\n\n"
             f"📖 {d['desc']}\n\n"
             f"- 📅 Jadwal: {d['jadwal']}\n"
             f"- 📍 Ruang: {d['ruang']}\n"

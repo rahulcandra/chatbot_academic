@@ -704,19 +704,19 @@ with st.sidebar:
                 st.session_state.history.append({"role": "assistant", "content": "🗑️ KRS berhasil dikosongkan."})
                 st.rerun()
         else:
-            st.info("Belum ada matkul dipilih.", icon="📭")
+            st.info("Belum ada matkul dipilih.")
 
         st.markdown('<span class="sbl">⚙️ Sistem</span>', unsafe_allow_html=True)
         ca, cb = st.columns(2)
         with ca:
-            if st.button("🔄 Reset Chat", use_container_width=True):
+            if st.button("Reset Chat", use_container_width=True):
                 dark_bak = st.session_state.dark_mode
                 st.session_state.clear()
                 st.session_state.dark_mode    = dark_bak
                 st.session_state.show_landing = False
                 st.rerun()
         with cb:
-            if st.button("🗑️ Hapus Chat", use_container_width=True):
+            if st.button("Hapus Chat", use_container_width=True):
                 st.session_state.history = []
                 st.rerun()
 
@@ -830,7 +830,7 @@ else:
     <div class="header-banner">
         {logo_img}
         <div>
-            <p class="header-title" style="color:#ffffff !important;">SIKRS — Chatbot Akademik UPGRIS</p>
+            <p class="header-title" style="color:#ffffff !important;">SIKRS - Chatbot Akademik UPGRIS</p>
             <p class="header-sub" style="color:#ffffff !important;">Sistem Informasi Kartu Rencana Studi · Teknik Informatika · Universitas PGRI Semarang</p>
         </div>
     </div>

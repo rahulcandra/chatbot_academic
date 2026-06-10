@@ -111,20 +111,40 @@ div[data-testid="stHeader"] {{ background:transparent !important; height:0 !impo
 [data-testid="stChatMessage"] span,
 [data-testid="stChatMessage"] div,
 [data-testid="stChatMessage"] li,
-[data-testid="stChatMessage"] strong {{
+[data-testid="stChatMessage"] strong,
+[data-testid="stChatMessage"] em,
+[data-testid="stChatMessage"] code,
+[data-testid="stChatMessage"] pre,
+[data-testid="stChatMessage"] ul,
+[data-testid="stChatMessage"] ol,
+[data-testid="stChatMessage"] a {{
     color: {C['text']} !important;
+}}
+[data-testid="stChatMessage"] code {{
+    background: {C['surface2']} !important;
+    color: {C['primary']} !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
 }}
 [data-testid="stCaptionContainer"] p, .stApp small {{
     color: {C['text_muted']} !important;
 }}
 
-/* ── Sidebar text ── */
+/* ── Sidebar text (non-gradient) ── */
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] small,
 section[data-testid="stSidebar"] div {{
     color: {C['text']} !important;
+}}
+
+/* ── CRITICAL OVERRIDE: gradient card elements always white ── */
+section[data-testid="stSidebar"] [data-white] p,
+section[data-testid="stSidebar"] [data-white] span,
+section[data-testid="stSidebar"] [data-white] div,
+section[data-testid="stSidebar"] [data-white] {{
+    color: #ffffff !important;
 }}
 
 /* ── Tabs ── */
@@ -156,6 +176,39 @@ div[data-testid="stChatInput"]>div:focus-within {{
 .stChatFloatingInputContainer>div,
 .stChatFloatingInputContainer>div>div {{
     background: {C['bg']} !important;
+}}
+
+/* ── Chat send button — blue bg, white arrow, NO inner white box ── */
+div[data-testid="stChatInput"] button {{
+    background-color: {C['primary']} !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 8px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}}
+div[data-testid="stChatInput"] button:hover {{
+    background-color: {C['primary']} !important;
+    opacity: 0.85 !important;
+}}
+div[data-testid="stChatInput"] button span,
+div[data-testid="stChatInput"] button div {{
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}}
+div[data-testid="stChatInput"] button svg {{
+    fill: #ffffff !important;
+    stroke: none !important;
+    border: none !important;
+    outline: none !important;
+}}
+div[data-testid="stChatInput"] button svg rect,
+div[data-testid="stChatInput"] button svg path[stroke] {{
+    stroke: none !important;
+    fill: #ffffff !important;
 }}
 
 /* ── Form inputs ── */
@@ -234,14 +287,26 @@ section[data-testid="stSidebar"]>div {{ padding:1.4rem 1.1rem !important; }}
 ::-webkit-scrollbar-track {{ background:{C['bg2']}; }}
 ::-webkit-scrollbar-thumb {{ background:{C['border']}; border-radius:3px; }}
 
-/* ── Sidebar Profile (always white — gradient bg) ── */
+/* ════════════════════════════════════════════════
+   GRADIENT SECTIONS — always white text
+   (must come AFTER the global color rules above
+   so specificity wins in both dark & light mode)
+   ════════════════════════════════════════════════ */
+
+/* ── Sidebar Profile ── */
 .sidebar-profile {{
     background: linear-gradient(135deg,#0f2d6e 0%,#1a3a8f 50%,#0ea5e9 100%);
     border-radius:16px; padding:18px 16px 16px; text-align:center;
     margin-bottom:14px; box-shadow:0 4px 24px rgba(26,86,219,.35);
     position:relative; overflow:hidden;
 }}
-.sidebar-profile * {{ color:#ffffff !important; }}
+.sidebar-profile,
+.sidebar-profile p,
+.sidebar-profile span,
+.sidebar-profile div,
+.sidebar-profile * {{
+    color: #ffffff !important;
+}}
 .sidebar-logo-wrap {{
     width:56px; height:56px; border-radius:14px;
     border:2px solid rgba(255,255,255,.3); background:rgba(255,255,255,.08);
@@ -249,14 +314,36 @@ section[data-testid="stSidebar"]>div {{ padding:1.4rem 1.1rem !important; }}
     display:flex; align-items:center; justify-content:center;
 }}
 
-/* ── Sidebar section label ── */
-.sbl {{
-    font-size:10px; font-weight:700; letter-spacing:1.5px;
-    text-transform:uppercase; color:{C['text_faint']} !important;
-    margin:14px 0 8px; display:block;
+/* ── Header Banner ── */
+.header-banner {{
+    background:linear-gradient(135deg,#0f2d6e 0%,#1a56db 45%,#0ea5e9 100%);
+    border-radius:18px; padding:22px 30px; margin-bottom:20px;
+    display:flex; align-items:center; gap:18px;
+    box-shadow:0 6px 36px rgba(26,86,219,.4);
+    position:relative; overflow:hidden;
+}}
+.header-banner::before {{
+    content:''; position:absolute; right:-40px; top:-40px;
+    width:220px; height:220px; border-radius:50%;
+    background:rgba(255,255,255,0.05); pointer-events:none;
+}}
+.header-banner,
+.header-banner p,
+.header-banner span,
+.header-banner div,
+.header-banner strong,
+.header-banner em,
+.header-banner * {{
+    color: #ffffff !important;
+}}
+.header-title {{
+    font-size:22px; font-weight:800; margin:0; letter-spacing:-.5px;
+}}
+.header-sub {{
+    font-size:12.5px; margin:3px 0 0; opacity:.85;
 }}
 
-/* ── Dashboard Card (always gradient, always white text) ── */
+/* ── Dashboard Card ── */
 .dash-card {{
     background: linear-gradient(135deg,#0f2d6e 0%,#1a56db 60%,#0ea5e9 100%);
     border-radius:16px; padding:20px 22px 16px; margin-bottom:10px;
@@ -268,7 +355,15 @@ section[data-testid="stSidebar"]>div {{ padding:1.4rem 1.1rem !important; }}
     width:160px; height:160px; border-radius:50%;
     background:rgba(255,255,255,0.06); pointer-events:none;
 }}
-.dash-card * {{ color:#ffffff !important; }}
+.dash-card,
+.dash-card p,
+.dash-card span,
+.dash-card div,
+.dash-card strong,
+.dash-card em,
+.dash-card * {{
+    color: #ffffff !important;
+}}
 .dash-label {{
     font-size:10px; font-weight:700; letter-spacing:1.8px;
     text-transform:uppercase; opacity:.75; margin-bottom:6px;
@@ -302,6 +397,13 @@ section[data-testid="stSidebar"]>div {{ padding:1.4rem 1.1rem !important; }}
 .dash-mini-lbl {{
     font-size:9px; font-weight:700; letter-spacing:1.2px;
     text-transform:uppercase; opacity:.7; margin-top:3px;
+}}
+
+/* ── Sidebar section label ── */
+.sbl {{
+    font-size:10px; font-weight:700; letter-spacing:1.5px;
+    text-transform:uppercase; color:{C['text_faint']} !important;
+    margin:14px 0 8px; display:block;
 }}
 
 /* ── KRS Items in sidebar ── */
@@ -341,27 +443,6 @@ section[data-testid="stSidebar"]>div {{ padding:1.4rem 1.1rem !important; }}
 .notif-pip {{
     width:6px; height:6px; border-radius:50%; background:{C['primary']};
     flex-shrink:0; margin-top:3px;
-}}
-
-/* ── Header Banner (always white text — gradient bg) ── */
-.header-banner {{
-    background:linear-gradient(135deg,#0f2d6e 0%,#1a56db 45%,#0ea5e9 100%);
-    border-radius:18px; padding:22px 30px; margin-bottom:20px;
-    display:flex; align-items:center; gap:18px;
-    box-shadow:0 6px 36px rgba(26,86,219,.4);
-    position:relative; overflow:hidden;
-}}
-.header-banner::before {{
-    content:''; position:absolute; right:-40px; top:-40px;
-    width:220px; height:220px; border-radius:50%;
-    background:rgba(255,255,255,0.05); pointer-events:none;
-}}
-.header-banner * {{ color:#ffffff !important; }}
-.header-title {{
-    font-size:22px; font-weight:800; margin:0; letter-spacing:-.5px;
-}}
-.header-sub {{
-    font-size:12.5px; margin:3px 0 0; opacity:.85;
 }}
 
 /* ── Landing ── */
@@ -423,7 +504,7 @@ section[data-testid="stSidebar"]>div {{ padding:1.4rem 1.1rem !important; }}
 .fact-icon {{ font-size:22px; flex-shrink:0; line-height:1.3; }}
 .fact-text {{ font-size:13.5px; line-height:1.75; color:{C['text']}; font-weight:500; }}
 
-/* ── Matkul tip card (Tips tab) — pure inline styles to avoid expander issue ── */
+/* ── Matkul tip card (Tips tab) ── */
 .mtcard {{
     background:{C['surface2']};
     border:1px solid {C['border']};
@@ -472,7 +553,7 @@ section[data-testid="stSidebar"]>div {{ padding:1.4rem 1.1rem !important; }}
 
 
 # ─────────────────────────────────────────────
-# HELPER: render catalog card (outside expander — safe)
+# HELPER: render catalog card
 # ─────────────────────────────────────────────
 def render_catalog_card(key, data, in_krs):
     nama = key.replace("_", " ").title()
@@ -513,10 +594,18 @@ with st.sidebar:
         if UPGRIS_LOGO_B64 else '<span style="font-size:28px;">🎓</span>'
     )
     st.markdown(f"""
-    <div class="sidebar-profile">
-        <div class="sidebar-logo-wrap">{logo_inner}</div>
-        <p style="font-size:14px;font-weight:700;margin:0;color:#fff;">SIKRS · UPGRIS</p>
-        <p style="font-size:11px;opacity:.85;margin:3px 0 0;color:#fff;">Sistem Informasi KRS 2026</p>
+    <div data-white style="background:linear-gradient(135deg,#0f2d6e 0%,#1a3a8f 50%,#0ea5e9 100%);
+                border-radius:16px;padding:18px 16px 16px;text-align:center;
+                margin-bottom:14px;box-shadow:0 4px 24px rgba(26,86,219,.35);
+                position:relative;overflow:hidden;">
+        <div data-white style="width:56px;height:56px;border-radius:14px;
+                    border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);
+                    overflow:hidden;margin:0 auto 10px;
+                    display:flex;align-items:center;justify-content:center;">
+            {logo_inner}
+        </div>
+        <p data-white style="font-size:14px;font-weight:700;margin:0;color:#ffffff;">SIKRS · UPGRIS</p>
+        <p data-white style="font-size:11px;opacity:.85;margin:3px 0 0;color:#ffffff;">Sistem Informasi KRS 2026</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -552,21 +641,39 @@ with st.sidebar:
 
         st.markdown('<span class="sbl">📊 Dashboard KRS</span>', unsafe_allow_html=True)
         st.markdown(f"""
-        <div class="dash-card">
-            <div class="dash-label">Total SKS Diambil</div>
-            <div class="dash-value">{total_sks}<span> / {max_sks} SKS</span></div>
-            <div class="dash-status">{status_emoji} {status_txt} · {pct}% terisi</div>
-            <div class="dash-bar-wrap">
-                <div class="dash-bar-inner" style="width:{pct}%;"></div>
+        <div data-white style="background:linear-gradient(135deg,#0f2d6e 0%,#1a56db 60%,#0ea5e9 100%);
+                    border-radius:16px;padding:20px 22px 16px;margin-bottom:10px;
+                    box-shadow:0 8px 32px rgba(26,86,219,.35);position:relative;overflow:hidden;">
+            <div data-white style="font-size:10px;font-weight:700;letter-spacing:1.8px;
+                        text-transform:uppercase;opacity:.75;margin-bottom:6px;color:#ffffff;">
+                Total SKS Diambil
             </div>
-            <div class="dash-grid">
-                <div class="dash-mini">
-                    <div class="dash-mini-val">{total_sks}</div>
-                    <div class="dash-mini-lbl">Diambil</div>
+            <div data-white style="font-family:'JetBrains Mono',monospace;font-size:42px;font-weight:800;
+                        line-height:1;letter-spacing:-2px;color:#ffffff;">
+                {total_sks}<span data-white style="font-size:18px;font-weight:400;opacity:.65;color:#ffffff;"> / {max_sks} SKS</span>
+            </div>
+            <div data-white style="font-size:12px;font-weight:600;margin-top:4px;opacity:.85;color:#ffffff;">
+                {status_emoji} {status_txt} · {pct}% terisi
+            </div>
+            <div data-white style="margin:14px 0 12px;background:rgba(255,255,255,.18);
+                        border-radius:999px;height:7px;overflow:hidden;">
+                <div data-white style="width:{pct}%;height:100%;border-radius:999px;
+                            background:rgba(255,255,255,.9);"></div>
+            </div>
+            <div data-white style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div data-white style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+                            border-radius:10px;padding:10px 12px;text-align:center;">
+                    <div data-white style="font-family:'JetBrains Mono',monospace;font-size:22px;
+                                font-weight:800;line-height:1;color:#ffffff;">{total_sks}</div>
+                    <div data-white style="font-size:9px;font-weight:700;letter-spacing:1.2px;
+                                text-transform:uppercase;opacity:.7;margin-top:3px;color:#ffffff;">Diambil</div>
                 </div>
-                <div class="dash-mini">
-                    <div class="dash-mini-val">{max_sks - total_sks}</div>
-                    <div class="dash-mini-lbl">Tersisa</div>
+                <div data-white style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+                            border-radius:10px;padding:10px 12px;text-align:center;">
+                    <div data-white style="font-family:'JetBrains Mono',monospace;font-size:22px;
+                                font-weight:800;line-height:1;color:#ffffff;">{max_sks - total_sks}</div>
+                    <div data-white style="font-size:9px;font-weight:700;letter-spacing:1.2px;
+                                text-transform:uppercase;opacity:.7;margin-top:3px;color:#ffffff;">Tersisa</div>
                 </div>
             </div>
         </div>
@@ -602,19 +709,19 @@ with st.sidebar:
         st.markdown('<span class="sbl">⚙️ Sistem</span>', unsafe_allow_html=True)
         ca, cb = st.columns(2)
         with ca:
-            if st.button("🔄 Reset", use_container_width=True):
+            if st.button("🔄 Reset Chat", use_container_width=True):
                 dark_bak = st.session_state.dark_mode
                 st.session_state.clear()
                 st.session_state.dark_mode    = dark_bak
                 st.session_state.show_landing = False
                 st.rerun()
         with cb:
-            if st.button("🗑️ Clear Chat", use_container_width=True):
+            if st.button("🗑️ Hapus Chat", use_container_width=True):
                 st.session_state.history = []
                 st.rerun()
 
     st.markdown("---")
-    st.caption("SIKRS 2026 · Powered by Rahul Candra\nUniversitas PGRI Semarang")
+    st.caption("SIKRS 2026 · Powered by Rahul Candra · Universitas PGRI Semarang")
 
 
 # ══════════════════════════════════════════════
@@ -723,8 +830,8 @@ else:
     <div class="header-banner">
         {logo_img}
         <div>
-            <p class="header-title">SIKRS — Chatbot Akademik UPGRIS</p>
-            <p class="header-sub">Sistem Informasi Kartu Rencana Studi · Teknik Informatika · Universitas PGRI Semarang</p>
+            <p class="header-title" style="color:#ffffff !important;">SIKRS — Chatbot Akademik UPGRIS</p>
+            <p class="header-sub" style="color:#ffffff !important;">Sistem Informasi Kartu Rencana Studi · Teknik Informatika · Universitas PGRI Semarang</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -740,11 +847,14 @@ else:
             chat_container = st.container(height=520)
             with chat_container:
                 for msg in st.session_state.history:
-                    avatar = "🎓" if msg["role"] == "assistant" else "🧑‍🎓"
+                    if msg["role"] == "assistant":
+                        avatar = f"data:image/png;base64,{UPGRIS_LOGO_B64}" if UPGRIS_LOGO_B64 else "🎓"
+                    else:
+                        avatar = "🧑‍🎓"
                     with st.chat_message(msg["role"], avatar=avatar):
                         st.markdown(msg["content"])
 
-            prompt = st.chat_input("Contoh: ambil struktur data / info matdis / rekomen / tips web")
+            prompt = st.chat_input("Contoh: ambil matkul / info matkul / rekomen matkul / jadwal kuliah")
             if prompt:
                 st.session_state.history.append({"role": "user", "content": prompt})
                 bot.step(prompt)
@@ -874,7 +984,6 @@ else:
         st.caption("Strategi dan tips belajar yang terbukti efektif untuk mahasiswa Teknik Informatika.")
         st.markdown("---")
 
-        # ── Strategi Belajar (menggunakan HTML di LUAR expander — aman) ──
         st.markdown(f'<h4 style="color:{C["text"]};margin-bottom:14px;">🧠 Strategi Belajar Efektif</h4>',
                     unsafe_allow_html=True)
         fact_icons = ["⏱️","🔁","✏️","👥","😴","🌅","📵","🗣️"]
@@ -890,7 +999,6 @@ else:
 
         st.markdown("---")
 
-        # ── Tips Per Matkul — GUNAKAN native Streamlit di dalam expander ──
         st.markdown(f'<h4 style="color:{C["text"]};margin-bottom:6px;">📚 Tips Belajar Per Mata Kuliah</h4>',
                     unsafe_allow_html=True)
         st.caption("Klik semester untuk membuka daftar mata kuliah beserta tips belajarnya.")
@@ -908,7 +1016,6 @@ else:
                     stars = "⭐" * diff + "☆" * (5 - diff)
                     diff_label = "Mudah" if diff <= 2 else "Sedang" if diff <= 3 else "Sulit"
 
-                    # Warna badge kesulitan
                     if diff <= 2:
                         diff_c, diff_bg = C["success"], C["success_bg"]
                     elif diff <= 3:
@@ -921,7 +1028,6 @@ else:
 
                     in_krs = any(c["course_key"] == k for c in bot.cart)
 
-                    # ── Gunakan native Streamlit — tidak ada raw HTML di dalam expander ──
                     st.markdown("---")
                     col_emoji, col_info = st.columns([0.08, 0.92])
                     with col_emoji:
@@ -931,7 +1037,6 @@ else:
                         st.markdown(f"**{nama}**{krs_tag}")
                         st.caption(f"{v['kode']} · Semester {v['semester']} · {v['sks']} SKS · 👨‍🏫 {v['dosen']} · 🕐 {v['jadwal']}")
 
-                    # Badge baris
                     badge_col1, badge_col2, badge_col3 = st.columns([1,1,3])
                     with badge_col1:
                         st.markdown(
@@ -944,12 +1049,10 @@ else:
                             f'{v["kategori"]}</span>',
                             unsafe_allow_html=True)
 
-                    # Tips box — aman di dalam expander pakai st.info
                     st.info(f"💡 {v['tips']}", icon=None)
 
         st.markdown("---")
 
-        # ── Ringkasan Statistik ──
         st.markdown(f'<h4 style="color:{C["text"]};margin-bottom:14px;">📊 Ringkasan Katalog</h4>',
                     unsafe_allow_html=True)
         total_matkul  = len(bot.nlp.course_data)

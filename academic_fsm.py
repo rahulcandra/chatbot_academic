@@ -752,7 +752,7 @@ class AcademicFSM:
 
     def _greeting(self):
         return (
-            "🎓 **Selamat datang di SIKRS — Sistem Informasi KRS UPGRIS!**\n\n"
+            "**Selamat datang di SIKRS UPGRIS!**\n\n"
             "Saya akan membantu kamu menyusun Kartu Rencana Studi Semester Genap 2025/2026.\n\n"
             "**Apa yang bisa saya lakukan?**\n"
             "- 📚 Tampilkan daftar mata kuliah\n"

@@ -668,8 +668,7 @@ class NLPEngine:
             return "THANKS"
 
         # ════════════════════════════════════════════════════════════
-        # FITUR: Ambil semua matkul semester X
-        # Harus dicek SEBELUM intent ADD agar tidak salah klasifikasi
+        # FITUR: Ambil semua matkul semester 1-8
         # ════════════════════════════════════════════════════════════
         if re.search(
             r'(ambil semua.*semester|semua matkul.*semester|matkul semester.*semua'
@@ -692,8 +691,7 @@ class NLPEngine:
             return "ADD_ALL_SEMESTER"
 
         # ════════════════════════════════════════════════════════════
-        # FITUR: Lihat semua matkul di semester X ("matkul semester 3 apa saja")
-        # Harus dicek SEBELUM intent MENU dan SCHEDULE
+        # FITUR: Lihat semua matkul di semester 1-8
         # ════════════════════════════════════════════════════════════
         if re.search(
             r'(matkul semester.*apa saja|mata kuliah semester.*apa saja'
@@ -731,7 +729,7 @@ class NLPEngine:
             return "EASY_MATKUL"
 
         # ════════════════════════════════════════════════════════════
-        # FITUR: Rekomendasi matkul gampang ("rekomen matkul gampang semester X")
+        # FITUR: Rekomendasi matkul gampang ("rekomen matkul gampang semester 1-8")
         # ════════════════════════════════════════════════════════════
         if re.search(
             r'(rekomen.*gampang|rekomen.*mudah|rekomen.*ringan|rekomen.*santai'
@@ -961,7 +959,7 @@ class AcademicFSM:
 
     # ════════════════════════════════════════════════════════════════
     # FITUR: add_all_semester
-    # Menambahkan semua matkul dari semester X ke KRS sekaligus.
+    # Menambahkan semua matkul dari semester 1-8 ke KRS sekaligus.
     # Melaporkan mana yang berhasil, duplikat, gagal prereq,
     # gagal jadwal, dan gagal karena SKS penuh.
     # ════════════════════════════════════════════════════════════════
@@ -1329,7 +1327,7 @@ class AcademicFSM:
             sks_now = self.total_sks()
             pct = int(sks_now / self.nlp.MAX_SKS * 100) if self.nlp.MAX_SKS else 0
             status = (
-                "🔴 Hampir penuh!" if pct >= 90
+                "🔴 Penuh!" if pct >= 90
                 else "🟡 Mendekati batas" if pct >= 70
                 else "🟢 Masih aman"
             )
@@ -1587,8 +1585,8 @@ class AcademicFSM:
             "untuk membantu mahasiswa **Teknik Informatika UPGRIS** menyusun KRS dengan mudah.\n\n"
             "Yang bisa saya lakukan:\n"
             "- ➕ Tambah/hapus matkul ke KRS\n"
-            "- 📦 Ambil semua matkul satu semester sekaligus ✨\n"
-            "- 📖 Lihat seluruh matkul satu semester ✨\n"
+            "- 📦 Ambil semua matkul satu semester sekaligus\n"
+            "- 📖 Lihat seluruh matkul satu semester\n"
             "- ⚠️ Validasi prasyarat & konflik jadwal otomatis\n"
             "- 🎯 Rekomendasikan matkul berdasarkan KRS aktif\n"
             "- 😊 Cari matkul gampang per semester\n"
@@ -1605,8 +1603,8 @@ class AcademicFSM:
                 "🤔 Hmm, saya kurang nangkep maksudnya nih. Coba pakai salah satu perintah ini:\n\n"
                 "- `menu` → lihat semua matkul\n"
                 "- `ambil [matkul]` → tambah ke KRS\n"
-                "- `ambil semua matkul semester 1` → ambil semua sekaligus ✨\n"
-                "- `matkul semester 2 apa saja` → lihat isi satu semester ✨\n"
+                "- `ambil semua matkul semester 1` → ambil semua sekaligus\n"
+                "- `matkul semester 2 apa saja` → lihat isi satu semester\n"
                 "- `info [matkul]` → detail matkul\n"
                 "- `pak bambang ngajar apa` → info dosen\n"
                 "- `matkul gampang semester 2` → cari yang ringan\n"
@@ -1653,8 +1651,8 @@ class AcademicFSM:
             "**Apa yang bisa saya lakukan?**\n"
             "- 📚 Tampilkan daftar mata kuliah\n"
             "- ➕ Tambah/hapus matkul ke KRS\n"
-            "- 📦 Ambil semua matkul satu semester sekaligus ✨\n"
-            "- 📖 Lihat seluruh matkul satu semester ✨\n"
+            "- 📦 Ambil semua matkul satu semester sekaligus\n"
+            "- 📖 Lihat seluruh matkul satu semester\n"
             "- ⚠️ Validasi prasyarat & konflik jadwal\n"
             "- 🎯 Rekomendasikan matkul\n"
             "- 😊 Cari matkul gampang per semester\n"
